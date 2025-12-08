@@ -31,7 +31,7 @@ export const UPDATE_CONTROLLER_TYPESCRIPT = `export const updateProduct = async 
   try {
     const { productId } = req.params;
     
-    const product = await fileResourceName.updateProduct(productId, req.body);
+    const product = await fileResourceName.updateProduct(req.body, productId);
     res.json(product)
   } catch (err) {
     next(err)
