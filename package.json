@@ -1,0 +1,93 @@
+{
+  "name": "hotkey",
+  "displayName": "Hot Key",
+  "description": "A VS Code extension for custom hotkeys",
+  "version": "0.0.1",
+  "publisher": "your-publisher-name",
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/vshotkey"
+  },
+  "keywords": [
+    "hotkey",
+    "keyboard",
+    "shortcuts",
+    "productivity",
+    "editing"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Keymaps",
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "hotkey.helloWorld",
+        "title": "Hot Key: Hello World"
+      },
+      {
+        "command": "hotkey.insertSnippet",
+        "title": "Hot Key: Insert Snippet"
+      },
+      {
+        "command": "hotkey.expressPrompts",
+        "title": "Hot Key: Express Prompts"
+      },
+      {
+        "command": "hotkey.createRouteFolders",
+        "title": "Hot Key: Create Route Folders"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "hotkey.helloWorld",
+        "key": "ctrl+shift+h",
+        "mac": "cmd+shift+h",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "hotkey.insertSnippet",
+        "key": "f14",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "hotkey.createRouteFolders",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "hotkey.createRouteFolders"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "20.x",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vscode/vsce": "^3.7.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}

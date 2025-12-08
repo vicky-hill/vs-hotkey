@@ -1,0 +1,35 @@
+export default `
+			<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>Express Prompts</title>
+				<style>
+					body {
+						padding: 20px;
+						font-family: var(--vscode-font-family);
+						color: var(--vscode-foreground);
+						background-color: var(--vscode-editor-background);
+					}
+					h1 {
+						color: var(--vscode-foreground);
+					}
+					p {
+						line-height: 1.6;
+					}
+				</style>
+			</head>
+			<body>
+				<h2>Express Prompts</h2>
+
+                <h3>Controller</h3>
+				<p>full, empy, get, getAll, getOne, getBy, getById, create, update, delete</p>
+				<br />
+                <p>getProductById</p>
+                <p>getproductbyid</p>
+                <p>getProduct</p>
+                <p>getproduct</p>
+			</body>
+			</html>
+		`;
