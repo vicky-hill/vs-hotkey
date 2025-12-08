@@ -63,6 +63,8 @@ function activate(context) {
         const filename = editor.document.fileName.split('/').pop() || 'untitled';
         const fileResourceName = filename.split('.')[0];
         const fileType = filename.split('.')[1];
+        const projectName = path.basename(path.dirname(path.dirname(editor.document.fileName)));
+        const repoName = path.basename(vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '');
         // Delete the trigger text
         await editor.edit(editBuilder => {
             editBuilder.delete(line.range);
@@ -72,7 +74,7 @@ function activate(context) {
         if (fileType === 'functions')
             await (0, handleFunctions_1.default)(input, fileResourceName);
         if (fileType === 'model')
-            await (0, handleModel_1.default)(input, fileResourceName);
+            await (0, handleModel_1.default)(input, fileResourceName, projectName, repoName);
     });
     // Register the express prompts command
     const expressPrompts = vscode.commands.registerCommand('hotkey.expressPrompts', async () => {

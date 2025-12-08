@@ -32,6 +32,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const fileResourceName: string = filename.split('.')[0];
 		const fileType: FileType = filename.split('.')[1] as FileType;
+		const projectName = path.basename(path.dirname(path.dirname(editor.document.fileName)));
+		const repoName = path.basename(vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '');
 
 		// Delete the trigger text
 		await editor.edit(editBuilder => {
@@ -40,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		if (fileType === 'controller') await handleController(input, fileResourceName);
 		if (fileType === 'functions') await handleFunctions(input, fileResourceName);
-		if (fileType === 'model') await handleModel(input, fileResourceName);
+		if (fileType === 'model') await handleModel(input, fileResourceName, projectName, repoName);
 	});
 
 	// Register the express prompts command

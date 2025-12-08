@@ -7,7 +7,9 @@ interface Parsed {
     options: string[] | null
 }
 
-export default async function handleModel(input: string, modelName: string) {
+
+
+export default async function handleModel(input: string, modelName: string, projectName: string, repoName: string) {
     const fields = input.replace(/ /g, "").split(",");
 
     const className = `${capitalize(unpluralize(modelName))}Model`;
@@ -15,6 +17,15 @@ export default async function handleModel(input: string, modelName: string) {
     const schemaName = `${uncapitalize(unpluralize(modelName))}Schema`;
     const interfaceName = capitalize(unpluralize(modelName));
     const id = `${uncapitalize(unpluralize(modelName))}Id`;
+
+    const shopApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
+import sequelize from '../config/westgate.db.config'
+    `
+
+    const masterApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
+import sequelize from '../../../config/${projectName}.db.config'`
+
+    const imports = repoName === 'shopwestgateapi' ? shopApiImports : masterApiImports;
 
     function parseField(field: string) {
         let type = "string";
@@ -136,9 +147,7 @@ export default async function handleModel(input: string, modelName: string) {
         })
         .join("\n");
 
-    const snippet = `
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
-import sequelize from '../../../config/falseidol.db.config'
+    const snippet = `${imports}
 
 export interface ${interfaceName} {
 ${interfaceFields}

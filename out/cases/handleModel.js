@@ -6,13 +6,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = handleModel;
 const insertSnippet_1 = __importDefault(require("../utils/insertSnippet"));
 const string_1 = require("../utils/string");
-async function handleModel(input, modelName) {
+async function handleModel(input, modelName, projectName, repoName) {
     const fields = input.replace(/ /g, "").split(",");
     const className = `${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}Model`;
     const tableName = (0, string_1.uncapitalize)((0, string_1.pluralize)(modelName.replace("Model", "")));
     const schemaName = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Schema`;
     const interfaceName = (0, string_1.capitalize)((0, string_1.unpluralize)(modelName));
     const id = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Id`;
+    const shopApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
+import sequelize from '../config/westgate.db.config'
+    `;
+    const masterApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
+import sequelize from '../../../config/${projectName}.db.config'`;
+    const imports = repoName === 'shopwestgateapi' ? shopApiImports : masterApiImports;
     function parseField(field) {
         let type = "string";
         let name = field;
@@ -115,9 +121,7 @@ async function handleModel(input, modelName) {
         }
     })
         .join("\n");
-    const snippet = `
-import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional, Association } from 'sequelize'
-import sequelize from '../../../config/falseidol.db.config'
+    const snippet = `${imports}
 
 export interface ${interfaceName} {
 ${interfaceFields}
