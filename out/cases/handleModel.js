@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = handleModel;
 const insertSnippet_1 = __importDefault(require("../utils/insertSnippet"));
 const string_1 = require("../utils/string");
-async function handleModel(input, modelName, projectName, repoName) {
+const generateSnippet_1 = __importDefault(require("../utils/generateSnippet"));
+const generateModel = async (input, modelName, projectName, repoName) => {
     const fields = input.replace(/ /g, "").split(",");
     const className = `${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}Model`;
     const tableName = (0, string_1.uncapitalize)((0, string_1.pluralize)(modelName.replace("Model", "")));
@@ -35,6 +36,18 @@ import sequelize from '../../../config/${projectName}.db.config'`;
             type = "enum";
             name = field.slice(1).split(":")[0];
             options = field.split(":");
+        }
+        else if (field.startsWith('.')) {
+            type = "decimal";
+            name = field.slice(1).split(":")[0];
+        }
+        else if (field === 'userId') {
+            type = "string";
+            name = field;
+        }
+        else if (field.endsWith('Id')) {
+            type = "number";
+            name = field;
         }
         if (options) {
             options.shift();
@@ -69,6 +82,7 @@ import sequelize from '../../../config/${projectName}.db.config'`;
             case "string":
                 return `    declare ${f.name}: string`;
             case "number":
+            case "decimal":
                 return `    declare ${f.name}: number`;
             case "boolean":
                 return `    declare ${f.name}: boolean`;
@@ -90,6 +104,9 @@ import sequelize from '../../../config/${projectName}.db.config'`;
                 break;
             case "number":
                 type = "Sequelize.INTEGER";
+                break;
+            case "decimal":
+                type = "Sequelize.DECIMAL";
                 break;
             case "boolean":
                 type = "Sequelize.BOOLEAN";
@@ -113,6 +130,7 @@ import sequelize from '../../../config/${projectName}.db.config'`;
             case "string":
                 return `    ${f.name}: string`;
             case "number":
+            case "decimal":
                 return `    ${f.name}: number`;
             case "boolean":
                 return `    ${f.name}: boolean`;
@@ -145,5 +163,52 @@ ${className}.init(${schemaName}, {
 export default ${className};
 `;
     await (0, insertSnippet_1.default)(snippet);
+};
+async function handleModel(input, fileResourceName, projectName, repoName) {
+    const lowerCaseInput = input.toLocaleLowerCase();
+    let resourceName = '';
+    let prompt = '';
+    let functionName = '';
+    // hasone image
+    // hasOne project
+    // hasOne cartItem
+    if (lowerCaseInput.startsWith('hasone')) {
+        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(input.split(' ')[1]));
+        prompt = 'hasone';
+    }
+    // product hasone image
+    // cart hasOnce cartItem
+    else if (lowerCaseInput.includes(' hasone ')) {
+        const [first, hasone, second] = input.split(' ');
+        fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
+        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
+        prompt = 'hasone';
+    }
+    // hasMany images
+    // hasmany cartItems
+    else if (lowerCaseInput.startsWith('hasmany')) {
+        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(input.split(' ')[1]));
+        prompt = 'hasMany';
+    }
+    // product hasMany images
+    // cart hasmany cartItems
+    else if (lowerCaseInput.includes(' hasmany ')) {
+        const [first, hasone, second] = input.split(' ');
+        fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
+        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
+        prompt = 'hasMany';
+    }
+    // notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive
+    else {
+        await generateModel(input, fileResourceName, projectName, repoName);
+        return;
+    }
+    await (0, generateSnippet_1.default)({
+        type: 'model',
+        prompt,
+        resourceName,
+        functionName,
+        fileResourceName
+    });
 }
 //# sourceMappingURL=handleModel.js.map

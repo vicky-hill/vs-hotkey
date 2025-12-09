@@ -186,9 +186,16 @@ router.route('/:productId').delete(deleteProduct)
 export default router;
 `
 
-export const MODEL_HAS_ONE_TYPESCRIPT = `ProductModel.hasOne(ResourceModel, {
-    foreignKey: 'resourceId',
-    sourceKey: 'resourceId',
-    as: 'resource'
+export const MODEL_HAS_ONE_TYPESCRIPT = `FileResourceNameModel.hasOne(ProductModel, {
+    foreignKey: 'productId',
+    sourceKey: 'productId',
+    as: 'product'
+});
+`
+
+export const MODEL_HAS_MANY_TYPESCRIPT = `FileResourceNameModel.hasMany(ProductModel, {
+    foreignKey: 'productId',
+    sourceKey: 'productId',
+    as: 'products'
 });
 `

@@ -69,8 +69,6 @@ export default async function handleFunctions(input: string, fileResourceName: s
         }
     }
 
-    console.log(input, prompt)
-
     await generateSnippet({
         type: 'functions',
         prompt,

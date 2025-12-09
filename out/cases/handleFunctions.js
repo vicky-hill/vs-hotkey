@@ -64,7 +64,6 @@ async function handleFunctions(input, fileResourceName) {
             prompt = 'custom';
         }
     }
-    console.log(input, prompt);
     await (0, generateSnippet_1.default)({
         type: 'functions',
         prompt,

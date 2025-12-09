@@ -1,5 +1,6 @@
 import insertSnippet from '../utils/insertSnippet';
 import { capitalize, pluralize, uncapitalize, unpluralize } from '../utils/string'
+import generateSnippet from '../utils/generateSnippet';
 
 interface Parsed {
     name: string
@@ -7,9 +8,7 @@ interface Parsed {
     options: string[] | null
 }
 
-
-
-export default async function handleModel(input: string, modelName: string, projectName: string, repoName: string) {
+const generateModel = async (input: string, modelName: string, projectName: string, repoName: string) => {
     const fields = input.replace(/ /g, "").split(",");
 
     const className = `${capitalize(unpluralize(modelName))}Model`;
@@ -42,6 +41,15 @@ import sequelize from '../../../config/${projectName}.db.config'`
             type = "enum";
             name = field.slice(1).split(":")[0];
             options = field.split(":");
+        } else if (field.startsWith('.')) {
+            type = "decimal";
+            name = field.slice(1).split(":")[0];
+        } else if (field === 'userId') {
+            type = "string";
+            name = field
+        } else if (field.endsWith('Id')) {
+            type = "number";
+            name = field
         }
 
         if (options) {
@@ -89,6 +97,7 @@ import sequelize from '../../../config/${projectName}.db.config'`
                 case "string":
                     return `    declare ${f.name}: string`;
                 case "number":
+                case "decimal":
                     return `    declare ${f.name}: number`;
                 case "boolean":
                     return `    declare ${f.name}: boolean`;
@@ -111,6 +120,9 @@ import sequelize from '../../../config/${projectName}.db.config'`
                     break;
                 case "number":
                     type = "Sequelize.INTEGER";
+                    break;
+                case "decimal":
+                    type = "Sequelize.DECIMAL";
                     break;
                 case "boolean":
                     type = "Sequelize.BOOLEAN";
@@ -138,6 +150,7 @@ import sequelize from '../../../config/${projectName}.db.config'`
                 case "string":
                     return `    ${f.name}: string`;
                 case "number":
+                case "decimal":
                     return `    ${f.name}: number`;
                 case "boolean":
                     return `    ${f.name}: boolean`;
@@ -172,4 +185,62 @@ export default ${className};
 `;
 
     await insertSnippet(snippet);
+}
+
+export default async function handleModel(input: string, fileResourceName: string, projectName: string, repoName: string) {
+    const lowerCaseInput = input.toLocaleLowerCase();
+
+    let resourceName = '';
+    let prompt = '';
+    let functionName = '';
+
+    // hasone image
+    // hasOne project
+    // hasOne cartItem
+    if (lowerCaseInput.startsWith('hasone')) {
+        resourceName = unpluralize(uncapitalize(input.split(' ')[1]));
+        prompt = 'hasone'
+    }
+
+    // product hasone image
+    // cart hasOnce cartItem
+    else if (lowerCaseInput.includes(' hasone ')) {
+        const [first, hasone, second] = input.split(' ');
+
+        fileResourceName = unpluralize(uncapitalize(first));
+        resourceName = unpluralize(uncapitalize(second));
+        prompt = 'hasone';
+    }
+
+    // hasMany images
+    // hasmany cartItems
+    else if (lowerCaseInput.startsWith('hasmany')) {
+        resourceName = unpluralize(uncapitalize(input.split(' ')[1]));
+        prompt = 'hasMany'
+    }
+
+    // product hasMany images
+    // cart hasmany cartItems
+    else if (lowerCaseInput.includes(' hasmany ')) {
+        const [first, hasone, second] = input.split(' ');
+
+        fileResourceName = unpluralize(uncapitalize(first));
+        resourceName = unpluralize(uncapitalize(second));
+        prompt = 'hasMany';
+    }
+
+
+    // notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive
+    else {
+        await generateModel(input, fileResourceName, projectName, repoName)
+        return;
+    }
+
+    await generateSnippet({
+        type: 'model',
+        prompt,
+        resourceName,
+        functionName,
+        fileResourceName
+    });
 }

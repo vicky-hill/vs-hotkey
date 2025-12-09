@@ -20,7 +20,8 @@ const templates = [
     { source: 'express', typescript: true, type: 'functions', prompt: 'custom', template: express_1.CUSTOM_FUNCTIONS_TYPESCRIPT },
     { source: 'express', typescript: true, type: 'routes', prompt: 'empty', template: express_1.ROUTES_TYPESCRIPT_EMPTY },
     { source: 'express', typescript: true, type: 'routes', prompt: 'full', template: express_1.ROUTES_TYPESCRIPT_FULL },
-    { source: 'express', typescript: true, type: 'model', prompt: 'hasone', template: express_1.ROUTES_TYPESCRIPT_FULL },
+    { source: 'express', typescript: true, type: 'model', prompt: 'hasOne', template: express_1.MODEL_HAS_ONE_TYPESCRIPT },
+    { source: 'express', typescript: true, type: 'model', prompt: 'hasMany', template: express_1.MODEL_HAS_MANY_TYPESCRIPT },
 ];
 // const products = await ProductModel.findAll();
 // -- findall product

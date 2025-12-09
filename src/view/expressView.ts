@@ -21,15 +21,33 @@ export default `
 				</style>
 			</head>
 			<body>
-				<h2>Express Prompts</h2>
-
-                <h3>Controller</h3>
-				<p>full, empy, get, getAll, getOne, getBy, getById, create, update, delete</p>
-				<br />
-                <p>getProductById</p>
-                <p>getproductbyid</p>
-                <p>getProduct</p>
-                <p>getproduct</p>
+                <h2>Express Prompts</h2>
+                <div>
+                    <h3>Controller</h3>
+                    <p>full, empy, get, getAll, getOne, getBy, getById, create, update, delete</p>
+                    <br />
+                    <p>getProductById, getproductbyid, getProduct, getproduct</p>
+                    <p>getProducts, getproducts</p>
+                    <p>createProduct, createproduct</p>
+                    <p>updateProduct, updateproduct</p>
+                    <p>deleteProduct, deleteproduct</p>
+                    <p>sendMessage, applyCodeToCart</p>
+                </div>
+                 <div>
+                    <h3>Functions</h3>
+                    <p>full, empy, get, getAll, getOne, getBy, getById, create, update, delete</p>
+                    <br />
+                    <p>getProductById, getproductbyid, getProduct, getproduct</p>
+                    <p>getProducts, getproducts</p>
+                    <p>createProduct, createproduct</p>
+                    <p>updateProduct, updateproduct</p>
+                    <p>deleteProduct, deleteproduct</p>
+                    <p>sendMessage, applyCodeToCart</p>
+                </div>
+                <div>
+                    <h3>Model</h3>
+                    <p>notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive</p>
+                </div>
 			</body>
 			</html>
 		`;

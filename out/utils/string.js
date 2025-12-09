@@ -70,8 +70,8 @@ const replaceResource = (template, resource, functionName, fileResourceName) => 
         .replaceAll("products", (0, exports.pluralize)((0, exports.uncapitalize)(resource)));
     if (fileResourceName) {
         snippet = snippet
-            .replaceAll("fileResourceName", (0, exports.unpluralize)((0, exports.capitalize)(fileResourceName)))
-            .replaceAll("fileResouce", (0, exports.unpluralize)((0, exports.uncapitalize)(fileResourceName)));
+            .replaceAll("FileResourceName", (0, exports.unpluralize)((0, exports.capitalize)(fileResourceName)))
+            .replaceAll("fileResouceName", (0, exports.unpluralize)((0, exports.uncapitalize)(fileResourceName)));
     }
     if (functionName) {
         snippet = snippet
