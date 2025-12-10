@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MODEL_HAS_MANY_TYPESCRIPT = exports.MODEL_HAS_ONE_TYPESCRIPT = exports.ROUTES_TYPESCRIPT_FULL = exports.ROUTES_TYPESCRIPT_EMPTY = exports.FUNCTIONS_TYPESCRIPT_EMPTY = exports.FUNCTIONS_TYPESCRIPT_FULL = exports.CONTROLLER_TYPESCRIPT_EMPTY = exports.CONTROLLER_TYPESCRIPT_FULL = exports.CUSTOM_FUNCTIONS_TYPESCRIPT = exports.DELETE_FUNCTIONS_TYPESCRIPT = exports.UPDATE_FUNCTIONS_TYPESCRIPT = exports.CREATE_FUNCTIONS_TYPESCRIPT = exports.GET_BY_FUNCTIONS_TYPESCRIPT = exports.GET_ALL_FUNCTIONS_TYPESCRIPT = exports.CUSTOM_CONTROLLER_TYPESCRIPT = exports.DELETE_CONTROLLER_TYPESCRIPT = exports.UPDATE_CONTROLLER_TYPESCRIPT = exports.CREATE_CONTROLLER_TYPESCRIPT = exports.GET_BY_CONTROLLER_TYPESCRIPT = exports.GET_ALL_CONTROLLER_TYPESCRIPT = void 0;
 exports.GET_ALL_CONTROLLER_TYPESCRIPT = `export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const products = await fileResourceName.getProducts();
+    const products = await FileResourceName.getProducts();
     res.json(products)
   } catch (err) {
     next(err)
@@ -14,7 +14,7 @@ exports.GET_BY_CONTROLLER_TYPESCRIPT = `export const getProductById = async (req
   try {
     const { productId } = req.params;
     
-    const product = await fileResourceName.getProductById(productId);
+    const product = await FileResourceName.getProductById(productId);
     res.json(product)
   } catch (err) {
     next(err)
@@ -22,7 +22,7 @@ exports.GET_BY_CONTROLLER_TYPESCRIPT = `export const getProductById = async (req
 }`;
 exports.CREATE_CONTROLLER_TYPESCRIPT = `export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {    
-    const product = await fileResourceName.createProduct(req.body);
+    const product = await FileResourceName.createProduct(req.body);
     res.json(product)
   } catch (err) {
     next(err)
@@ -32,7 +32,7 @@ exports.UPDATE_CONTROLLER_TYPESCRIPT = `export const updateProduct = async (req:
   try {
     const { productId } = req.params;
     
-    const product = await fileResourceName.updateProduct(req.body, productId);
+    const product = await FileResourceName.updateProduct(req.body, productId);
     res.json(product)
   } catch (err) {
     next(err)
@@ -42,7 +42,7 @@ exports.DELETE_CONTROLLER_TYPESCRIPT = `export const deleteProduct = async (req:
   try {
     const { productId } = req.params;
     
-    const product = await fileResourceName.deleteProduct(productId);
+    const product = await FileResourceName.deleteProduct(productId);
     res.json(product)
   } catch (err) {
     next(err)
@@ -50,7 +50,7 @@ exports.DELETE_CONTROLLER_TYPESCRIPT = `export const deleteProduct = async (req:
 }`;
 exports.CUSTOM_CONTROLLER_TYPESCRIPT = `export const functionName = async (req: Request, res: Response, next: NextFunction) => {
   try {    
-    const result = await fileResourceName.functionName();
+    const result = await FileResourceName.functionName();
     res.json(result)
   } catch (err) {
     next(err)
@@ -70,8 +70,8 @@ exports.GET_ALL_FUNCTIONS_TYPESCRIPT = `export const getProducts = async () => {
     return products;
 }`;
 exports.GET_BY_FUNCTIONS_TYPESCRIPT = `export const getProductById = async (productId: string) => {
-    const productInstance = await ProductModel.findByPk({
-        where: { productId }
+    const productInstance = await ProductModel.findByPk(productId, {
+
     });
 
     if (!productInstance) throw new Error('Product not found');
@@ -132,7 +132,7 @@ ${exports.UPDATE_FUNCTIONS_TYPESCRIPT}
 
 ${exports.DELETE_FUNCTIONS_TYPESCRIPT}
 `;
-exports.FUNCTIONS_TYPESCRIPT_EMPTY = `import ProductModel, { Product } from './products.model
+exports.FUNCTIONS_TYPESCRIPT_EMPTY = `import ProductModel, { Product } from './products.model'
 
 ${exports.GET_ALL_FUNCTIONS_TYPESCRIPT}
 `;

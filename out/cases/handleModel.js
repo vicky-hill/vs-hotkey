@@ -8,7 +8,8 @@ const insertSnippet_1 = __importDefault(require("../utils/insertSnippet"));
 const string_1 = require("../utils/string");
 const generateSnippet_1 = __importDefault(require("../utils/generateSnippet"));
 const generateModel = async (input, modelName, projectName, repoName) => {
-    const fields = input.replace(/ /g, "").split(",");
+    // const fields = input.replace(/ /g, "").split(",");
+    const fields = input.split(' ');
     const className = `${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}Model`;
     const tableName = (0, string_1.uncapitalize)((0, string_1.pluralize)(modelName.replace("Model", "")));
     const schemaName = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Schema`;
@@ -20,11 +21,19 @@ import sequelize from '../config/westgate.db.config'
     const masterApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/${projectName}.db.config'`;
     const imports = repoName === 'shopwestgateapi' ? shopApiImports : masterApiImports;
-    function parseField(field) {
+    function parseField(field, i) {
         let type = "string";
         let name = field;
         let options = null;
-        if (field.startsWith("#")) {
+        if (i === 0 && name === 'userId') {
+            type = 'string';
+            name = field;
+        }
+        else if (i === 0) {
+            type = 'number';
+            name = id;
+        }
+        else if (field.startsWith("#")) {
             type = "number";
             name = field.slice(1);
         }
@@ -95,9 +104,7 @@ import sequelize from '../../../config/${projectName}.db.config'`;
     const schemaFields = parsed
         .map((f, i) => {
         let name = f.name;
-        if (i === 0)
-            name = id;
-        let type;
+        let type = f.type;
         switch (f.type) {
             case "string":
                 type = "Sequelize.STRING";
@@ -115,7 +122,7 @@ import sequelize from '../../../config/${projectName}.db.config'`;
                 type = `Sequelize.ENUM({ values: [${enumOptions(f.options, "values")}] })`;
                 break;
         }
-        const extras = f.name === "product"
+        const extras = (i === 0)
             ? ",\n        primaryKey: true,\n        autoIncrement: true"
             : "";
         return `    ${name}: {\n        type: ${type}${extras}\n    }`;

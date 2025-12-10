@@ -9,7 +9,8 @@ interface Parsed {
 }
 
 const generateModel = async (input: string, modelName: string, projectName: string, repoName: string) => {
-    const fields = input.replace(/ /g, "").split(",");
+    // const fields = input.replace(/ /g, "").split(",");
+    const fields = input.split(' ');
 
     const className = `${capitalize(unpluralize(modelName))}Model`;
     const tableName = uncapitalize(pluralize(modelName.replace("Model", "")));
@@ -26,12 +27,18 @@ import sequelize from '../../../config/${projectName}.db.config'`
 
     const imports = repoName === 'shopwestgateapi' ? shopApiImports : masterApiImports;
 
-    function parseField(field: string) {
+    function parseField(field: string, i: number) {
         let type = "string";
         let name = field;
         let options = null;
 
-        if (field.startsWith("#")) {
+        if (i === 0 && name === 'userId') {
+            type = 'string'
+            name = field
+        } else if (i === 0) {
+            type = 'number'
+            name = id
+        } else if (field.startsWith("#")) {
             type = "number";
             name = field.slice(1);
         } else if (field.startsWith("?")) {
@@ -111,9 +118,8 @@ import sequelize from '../../../config/${projectName}.db.config'`
     const schemaFields = parsed
         .map((f, i) => {
             let name = f.name;
-            if (i === 0) name = id;
+            let type = f.type;
 
-            let type;
             switch (f.type) {
                 case "string":
                     type = "Sequelize.STRING";
@@ -133,7 +139,7 @@ import sequelize from '../../../config/${projectName}.db.config'`
             }
 
             const extras =
-                f.name === "product"
+                (i === 0)
                     ? ",\n        primaryKey: true,\n        autoIncrement: true"
                     : "";
 

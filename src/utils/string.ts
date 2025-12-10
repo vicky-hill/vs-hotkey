@@ -67,7 +67,7 @@ export const replaceResource = (template: any, resource: string, functionName: s
   if (fileResourceName) {
     snippet = snippet
       .replaceAll("FileResourceName", unpluralize(capitalize(fileResourceName)))
-      .replaceAll("fileResouceName", unpluralize(uncapitalize(fileResourceName)))
+      .replaceAll("fileResourceName", unpluralize(uncapitalize(fileResourceName)))
   }
 
   if (functionName) {
