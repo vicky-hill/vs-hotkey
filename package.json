@@ -41,6 +41,10 @@
         "title": "Hot Key: Express Prompts"
       },
       {
+        "command": "hotkey.sequelizePrompts",
+        "title": "Hot Key: Sequelize Prompts"
+      },
+      {
         "command": "hotkey.createRouteFolders",
         "title": "Hot Key: Create Route Folders"
       }

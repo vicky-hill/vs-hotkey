@@ -200,10 +200,20 @@ async function handleModel(input, fileResourceName, projectName, repoName) {
     // product hasMany images
     // cart hasmany cartItems
     else if (lowerCaseInput.includes(' hasmany ')) {
-        const [first, hasone, second] = input.split(' ');
+        const [first, hasMany, second] = input.split(' ');
         fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
         resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
         prompt = 'hasMany';
+    }
+    else if (lowerCaseInput.startsWith('belongsto')) {
+        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(input.split(' ')[1]));
+        prompt = 'belongsTo';
+    }
+    else if (lowerCaseInput.includes(' belongsto ')) {
+        const [first, belongsto, second] = input.split(' ');
+        fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
+        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
+        prompt = 'belongsTo';
     }
     // notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive
     else {

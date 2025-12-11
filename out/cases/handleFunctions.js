@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = handleFunctions;
 const generateSnippet_1 = __importDefault(require("../utils/generateSnippet"));
 const string_1 = require("../utils/string");
+const insertSnippet_1 = __importDefault(require("../utils/insertSnippet"));
+const templates_1 = __importDefault(require("../templates"));
 async function handleFunctions(input, fileResourceName) {
     const lowerCaseInput = input.toLocaleLowerCase();
     let resourceName = '';
@@ -55,6 +57,26 @@ async function handleFunctions(input, fileResourceName) {
         else if (input.startsWith('delete')) {
             prompt = 'delete';
             resourceName = input.replace('delete', '');
+        }
+        // include user
+        // i user
+        else if (lowerCaseInput.startsWith('include') || lowerCaseInput.startsWith('i ')) {
+            resourceName = (0, string_1.uncapitalize)(input.split(' ')[1]);
+            const template = templates_1.default.find(template => template.type === 'functions' && template.prompt === 'includeFull');
+            const snippetText = template?.template
+                .replaceAll("Product", (0, string_1.unpluralize)((0, string_1.capitalize)(resourceName)))
+                .replaceAll("product", (0, string_1.uncapitalize)(resourceName));
+            await (0, insertSnippet_1.default)(snippetText);
+            return;
+        }
+        else if (input.startsWith('}i ') || input.startsWith('} i ') || input.startsWith('}include') || input.startsWith('} include')) {
+            resourceName = (0, string_1.uncapitalize)(input.replace('} ', '}').split(' ')[1]);
+            const template = templates_1.default.find(template => template.type === 'functions' && template.prompt === 'includePartial');
+            const snippetText = template?.template
+                .replaceAll("Product", (0, string_1.unpluralize)((0, string_1.capitalize)(resourceName)))
+                .replaceAll("product", (0, string_1.uncapitalize)(resourceName));
+            await (0, insertSnippet_1.default)(snippetText);
+            return;
         }
         // sendMessage
         // applyCodeToCart

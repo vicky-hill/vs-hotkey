@@ -1,6 +1,7 @@
 import insertSnippet from '../utils/insertSnippet';
 import { capitalize, pluralize, uncapitalize, unpluralize } from '../utils/string'
 import generateSnippet from '../utils/generateSnippet';
+import templates from '../templates';
 
 interface Parsed {
     name: string
@@ -228,13 +229,25 @@ export default async function handleModel(input: string, fileResourceName: strin
     // product hasMany images
     // cart hasmany cartItems
     else if (lowerCaseInput.includes(' hasmany ')) {
-        const [first, hasone, second] = input.split(' ');
+        const [first, hasMany, second] = input.split(' ');
 
         fileResourceName = unpluralize(uncapitalize(first));
         resourceName = unpluralize(uncapitalize(second));
         prompt = 'hasMany';
     }
 
+    else if (lowerCaseInput.startsWith('belongsto')) {
+        resourceName = unpluralize(uncapitalize(input.split(' ')[1]));
+        prompt = 'belongsTo'
+    }
+
+    else if (lowerCaseInput.includes(' belongsto ')) {
+        const [first, belongsto, second] = input.split(' ');
+
+        fileResourceName = unpluralize(uncapitalize(first));
+        resourceName = unpluralize(uncapitalize(second));
+        prompt = 'belongsTo';
+    }
 
     // notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive
     else {

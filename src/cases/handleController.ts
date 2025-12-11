@@ -1,5 +1,7 @@
 import generateSnippet from '../utils/generateSnippet'
-import { uncapitalize } from '../utils/string'
+import { uncapitalize, capitalize, unpluralize } from '../utils/string';
+import insertSnippet from '../utils/insertSnippet';
+import templates from '../templates';
 
 export default async function handleController(input: string, fileResourceName: string) {
     const lowerCaseInput = input.toLocaleLowerCase();

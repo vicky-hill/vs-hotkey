@@ -45,6 +45,7 @@ const handleController_1 = __importDefault(require("./cases/handleController"));
 const handleFunctions_1 = __importDefault(require("./cases/handleFunctions"));
 const handleModel_1 = __importDefault(require("./cases/handleModel"));
 const expressView_1 = __importDefault(require("./view/expressView"));
+const sequelizeView_1 = __importDefault(require("./view/sequelizeView"));
 function activate(context) {
     console.log('Hot Key extension is now active!');
     // Register the hello world command
@@ -59,6 +60,7 @@ function activate(context) {
         const position = editor.selection.active;
         const line = editor.document.lineAt(position.line);
         const lineText = line.text.trim();
+        console.log(lineText);
         const input = lineText.trim();
         const filename = editor.document.fileName.split('/').pop() || 'untitled';
         const fileResourceName = filename.split('.')[0];
@@ -81,6 +83,11 @@ function activate(context) {
         // Create and show webview panel
         const panel = vscode.window.createWebviewPanel('expressPrompts', 'Express Prompts', vscode.ViewColumn.One, {});
         panel.webview.html = expressView_1.default;
+    });
+    const sequelizePrompts = vscode.commands.registerCommand('hotkey.sequelizePrompts', async () => {
+        // Create and show webview panel
+        const panel = vscode.window.createWebviewPanel('sequelizePrompts', 'Sequelize Prompts', vscode.ViewColumn.One, {});
+        panel.webview.html = sequelizeView_1.default;
     });
     // Register the create route folders command
     const createRouteFolders = vscode.commands.registerCommand('hotkey.createRouteFolders', async (uri) => {
@@ -163,7 +170,7 @@ function activate(context) {
             vscode.window.showErrorMessage(`Error creating route folder: ${error}`);
         }
     });
-    context.subscriptions.push(helloWorld, insertSnippet, expressPrompts, createRouteFolders);
+    context.subscriptions.push(helloWorld, insertSnippet, expressPrompts, sequelizePrompts, createRouteFolders);
 }
 /**
  * This method is called when your extension is deactivated

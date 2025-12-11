@@ -5,6 +5,7 @@ import handleController from './cases/handleController'
 import handleFunctions from './cases/handleFunctions'
 import handleModel from './cases/handleModel'
 import expressView from './view/expressView'
+import sequelizeView from './view/sequelizeView'
 
 export type FileType = 'controller' | 'functions' | 'routes' | 'model' | 'slice' | 'tsx'
 
@@ -26,6 +27,8 @@ export function activate(context: vscode.ExtensionContext) {
 		const position = editor.selection.active;
 		const line = editor.document.lineAt(position.line);
 		const lineText = line.text.trim();
+
+		console.log(lineText)
 
 		const input = lineText.trim();
 		const filename = editor.document.fileName.split('/').pop() || 'untitled';
@@ -56,6 +59,18 @@ export function activate(context: vscode.ExtensionContext) {
 		);
 
 		panel.webview.html = expressView;
+	});
+
+	const sequelizePrompts = vscode.commands.registerCommand('hotkey.sequelizePrompts', async () => {
+		// Create and show webview panel
+		const panel = vscode.window.createWebviewPanel(
+			'sequelizePrompts',
+			'Sequelize Prompts',
+			vscode.ViewColumn.One,
+			{}
+		);
+
+		panel.webview.html = sequelizeView;
 	});
 
 	// Register the create route folders command
@@ -152,7 +167,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(helloWorld, insertSnippet, expressPrompts, createRouteFolders);
+	context.subscriptions.push(helloWorld, insertSnippet, expressPrompts, sequelizePrompts, createRouteFolders);
 }
 
 /**

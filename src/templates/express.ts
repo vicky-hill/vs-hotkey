@@ -194,8 +194,24 @@ export const MODEL_HAS_ONE_TYPESCRIPT = `FileResourceNameModel.hasOne(ProductMod
 `
 
 export const MODEL_HAS_MANY_TYPESCRIPT = `FileResourceNameModel.hasMany(ProductModel, {
-    foreignKey: 'productId',
-    sourceKey: 'productId',
-    as: 'products'
+    foreignKey: 'fileResourceNameId',
+    as: 'products',
+    onDelete: 'CASCADE'
 });
 `
+
+export const MODEL_BELONGS_TO_TYPESCRIPT = `FileResourceNameModel.belongsTo(ProductModel, {
+  foreignKey: 'productId',
+  as: 'product'
+})
+`
+
+export const INCLUDE_FULL_TYPESCRIPT = `      include: [{
+        model: ProductModel,
+        as: 'product'
+      }]`
+
+export const INCLUDE_PARTIAL_TYPESCRIPT = `,{
+        model: ProductModel,
+        as: 'product'
+      }`

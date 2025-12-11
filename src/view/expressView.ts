@@ -47,6 +47,7 @@ export default `
                 <div>
                     <h3>Model</h3>
                     <p>notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive</p>
+                    <p>hasone</p>
                 </div>
 			</body>
 			</html>

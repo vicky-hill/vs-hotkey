@@ -1,5 +1,7 @@
 import generateSnippet from '../utils/generateSnippet'
-import { uncapitalize } from '../utils/string'
+import { uncapitalize, capitalize, unpluralize } from '../utils/string';
+import insertSnippet from '../utils/insertSnippet';
+import templates from '../templates';
 
 export default async function handleFunctions(input: string, fileResourceName: string) {
     const lowerCaseInput = input.toLocaleLowerCase();
@@ -58,6 +60,32 @@ export default async function handleFunctions(input: string, fileResourceName: s
         else if (input.startsWith('delete')) {
             prompt = 'delete'
             resourceName = input.replace('delete', '');
+        }
+
+        // include user
+        // i user
+        else if (lowerCaseInput.startsWith('include') || lowerCaseInput.startsWith('i ')) {
+            resourceName = uncapitalize(input.split(' ')[1]);
+
+            const template: any = templates.find(template => template.type === 'functions' && template.prompt === 'includeFull');
+            const snippetText = template?.template
+                .replaceAll("Product", unpluralize(capitalize(resourceName)))
+                .replaceAll("product", uncapitalize(resourceName))
+            await insertSnippet(snippetText);
+
+            return;
+        }
+
+        else if (input.startsWith('}i ') || input.startsWith('} i ') || input.startsWith('}include') || input.startsWith('} include')) {
+            resourceName = uncapitalize(input.replace('} ', '}').split(' ')[1]);
+
+            const template: any = templates.find(template => template.type === 'functions' && template.prompt === 'includePartial');
+            const snippetText = template?.template
+                .replaceAll("Product", unpluralize(capitalize(resourceName)))
+                .replaceAll("product", uncapitalize(resourceName))
+            await insertSnippet(snippetText);
+
+            return;
         }
 
         // sendMessage

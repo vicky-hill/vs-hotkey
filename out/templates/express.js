@@ -1,7 +1,7 @@
 "use strict";
 // Controllers
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MODEL_HAS_MANY_TYPESCRIPT = exports.MODEL_HAS_ONE_TYPESCRIPT = exports.ROUTES_TYPESCRIPT_FULL = exports.ROUTES_TYPESCRIPT_EMPTY = exports.FUNCTIONS_TYPESCRIPT_EMPTY = exports.FUNCTIONS_TYPESCRIPT_FULL = exports.CONTROLLER_TYPESCRIPT_EMPTY = exports.CONTROLLER_TYPESCRIPT_FULL = exports.CUSTOM_FUNCTIONS_TYPESCRIPT = exports.DELETE_FUNCTIONS_TYPESCRIPT = exports.UPDATE_FUNCTIONS_TYPESCRIPT = exports.CREATE_FUNCTIONS_TYPESCRIPT = exports.GET_BY_FUNCTIONS_TYPESCRIPT = exports.GET_ALL_FUNCTIONS_TYPESCRIPT = exports.CUSTOM_CONTROLLER_TYPESCRIPT = exports.DELETE_CONTROLLER_TYPESCRIPT = exports.UPDATE_CONTROLLER_TYPESCRIPT = exports.CREATE_CONTROLLER_TYPESCRIPT = exports.GET_BY_CONTROLLER_TYPESCRIPT = exports.GET_ALL_CONTROLLER_TYPESCRIPT = void 0;
+exports.INCLUDE_PARTIAL_TYPESCRIPT = exports.INCLUDE_FULL_TYPESCRIPT = exports.MODEL_BELONGS_TO_TYPESCRIPT = exports.MODEL_HAS_MANY_TYPESCRIPT = exports.MODEL_HAS_ONE_TYPESCRIPT = exports.ROUTES_TYPESCRIPT_FULL = exports.ROUTES_TYPESCRIPT_EMPTY = exports.FUNCTIONS_TYPESCRIPT_EMPTY = exports.FUNCTIONS_TYPESCRIPT_FULL = exports.CONTROLLER_TYPESCRIPT_EMPTY = exports.CONTROLLER_TYPESCRIPT_FULL = exports.CUSTOM_FUNCTIONS_TYPESCRIPT = exports.DELETE_FUNCTIONS_TYPESCRIPT = exports.UPDATE_FUNCTIONS_TYPESCRIPT = exports.CREATE_FUNCTIONS_TYPESCRIPT = exports.GET_BY_FUNCTIONS_TYPESCRIPT = exports.GET_ALL_FUNCTIONS_TYPESCRIPT = exports.CUSTOM_CONTROLLER_TYPESCRIPT = exports.DELETE_CONTROLLER_TYPESCRIPT = exports.UPDATE_CONTROLLER_TYPESCRIPT = exports.CREATE_CONTROLLER_TYPESCRIPT = exports.GET_BY_CONTROLLER_TYPESCRIPT = exports.GET_ALL_CONTROLLER_TYPESCRIPT = void 0;
 exports.GET_ALL_CONTROLLER_TYPESCRIPT = `export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const products = await FileResourceName.getProducts();
@@ -176,9 +176,22 @@ exports.MODEL_HAS_ONE_TYPESCRIPT = `FileResourceNameModel.hasOne(ProductModel, {
 });
 `;
 exports.MODEL_HAS_MANY_TYPESCRIPT = `FileResourceNameModel.hasMany(ProductModel, {
-    foreignKey: 'productId',
-    sourceKey: 'productId',
-    as: 'products'
+    foreignKey: 'fileResourceNameId',
+    as: 'products',
+    onDelete: 'CASCADE'
 });
 `;
+exports.MODEL_BELONGS_TO_TYPESCRIPT = `FileResourceNameModel.belongsTo(ProductModel, {
+  foreignKey: 'productId',
+  as: 'product'
+})
+`;
+exports.INCLUDE_FULL_TYPESCRIPT = `      include: [{
+        model: ProductModel,
+        as: 'product'
+      }]`;
+exports.INCLUDE_PARTIAL_TYPESCRIPT = `,{
+        model: ProductModel,
+        as: 'product'
+      }`;
 //# sourceMappingURL=express.js.map

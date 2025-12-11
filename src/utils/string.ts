@@ -74,6 +74,7 @@ export const replaceResource = (template: any, resource: string, functionName: s
     snippet = snippet
       .replaceAll("functionName", functionName)
   }
+  
 
   return snippet;
 };
