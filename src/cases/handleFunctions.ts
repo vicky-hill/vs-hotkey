@@ -2,6 +2,7 @@ import generateSnippet from '../utils/generateSnippet'
 import { uncapitalize, capitalize, unpluralize } from '../utils/string';
 import insertSnippet from '../utils/insertSnippet';
 import templates from '../templates';
+import getPromptOptions from '../utils/getPromptOptions';
 
 export default async function handleFunctions(input: string, fileResourceName: string) {
     const lowerCaseInput = input.toLocaleLowerCase();
@@ -9,6 +10,7 @@ export default async function handleFunctions(input: string, fileResourceName: s
     let resourceName = '';
     let functionName = '';
     let prompt = '';
+    let options = null;
 
     if (['full', 'empty', 'get', 'getall', 'getone', 'getby', 'getbyid', 'create', 'update', 'delete'].includes(lowerCaseInput)) {
         resourceName = fileResourceName;
@@ -26,7 +28,7 @@ export default async function handleFunctions(input: string, fileResourceName: s
         // getproductbyid
         // getProduct
         // getproduct
-    } else if ((lowerCaseInput.includes('by') || (input.startsWith('get') && !input.endsWith('s'))) && (!lowerCaseInput.includes('create') && !lowerCaseInput.includes('update') && !lowerCaseInput.includes('delete'))) {
+    } else if ((lowerCaseInput.includes('by') || (input.startsWith('get') && !input.endsWith('s'))) && (!lowerCaseInput.includes('create') && !lowerCaseInput.includes('update') && !lowerCaseInput.includes('delete') && !lowerCaseInput.includes('findbypk'))) {
         const match1 = input.match(/^get(.*)by/i);
         const match2 = input.match(/^get(.*)/i);
         resourceName = match1 ? uncapitalize(match1[1]) : match2 ? uncapitalize(match2[1]) : fileResourceName;
@@ -67,7 +69,7 @@ export default async function handleFunctions(input: string, fileResourceName: s
         else if (lowerCaseInput.startsWith('include') || lowerCaseInput.startsWith('i ')) {
             resourceName = uncapitalize(input.split(' ')[1]);
 
-            const template: any = templates.find(template => template.type === 'functions' && template.prompt === 'includeFull');
+            const template: any = templates.find(template => template.type === 'functions' && template.prompt === 'include');
             const snippetText = template?.template
                 .replaceAll("Product", unpluralize(capitalize(resourceName)))
                 .replaceAll("product", uncapitalize(resourceName))
@@ -76,16 +78,16 @@ export default async function handleFunctions(input: string, fileResourceName: s
             return;
         }
 
-        else if (input.startsWith('}i ') || input.startsWith('} i ') || input.startsWith('}include') || input.startsWith('} include')) {
-            resourceName = uncapitalize(input.replace('} ', '}').split(' ')[1]);
+        // findbypk
+        // post findbypk
+        else if (lowerCaseInput.includes('findbypk')) {
+            resourceName = lowerCaseInput.startsWith('findbypk') ? fileResourceName : input.split(' ')[0];
+            prompt = 'findByPk'
+            options = getPromptOptions(input, 'functions') 
 
-            const template: any = templates.find(template => template.type === 'functions' && template.prompt === 'includePartial');
-            const snippetText = template?.template
-                .replaceAll("Product", unpluralize(capitalize(resourceName)))
-                .replaceAll("product", uncapitalize(resourceName))
-            await insertSnippet(snippetText);
-
-            return;
+            if (options) {
+                prompt = 'findByPkWithOptions'
+            }
         }
 
         // sendMessage
@@ -97,9 +99,12 @@ export default async function handleFunctions(input: string, fileResourceName: s
         }
     }
 
+    console.log('prompt', prompt)
+
     await generateSnippet({
         type: 'functions',
         prompt,
+        options,
         resourceName,
         functionName,
         fileResourceName

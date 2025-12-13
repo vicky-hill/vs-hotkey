@@ -43,12 +43,19 @@ export default `
                     <p>updateProduct, updateproduct</p>
                     <p>deleteProduct, deleteproduct</p>
                     <p>sendMessage, applyCodeToCart</p>
+                    <br />
+                    <p>findByPk, findbypk, product findbypk</p>
+                    <p>findByPk i a o</p>
+                    <p>findByPk i post a userId, name o createdAt</p>
                 </div>
                 <div>
                     <h3>Model</h3>
                     <p>notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive</p>
-                    <p>hasone</p>
+                    <p>hasone profile, user hasone profile</p>
+                    <p>hasMany posts, user hasMany posts</p>
+                    <p>include, include user, include posts | i, i user, i posts</p>
                 </div>
 			</body>
 			</html>
 		`;
+

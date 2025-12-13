@@ -181,7 +181,7 @@ async function handleModel(input, fileResourceName, projectName, repoName) {
     // hasOne cartItem
     if (lowerCaseInput.startsWith('hasone')) {
         resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(input.split(' ')[1]));
-        prompt = 'hasone';
+        prompt = 'hasOne';
     }
     // product hasone image
     // cart hasOnce cartItem
@@ -189,7 +189,7 @@ async function handleModel(input, fileResourceName, projectName, repoName) {
         const [first, hasone, second] = input.split(' ');
         fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
         resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
-        prompt = 'hasone';
+        prompt = 'hasOne';
     }
     // hasMany images
     // hasmany cartItems
@@ -204,16 +204,6 @@ async function handleModel(input, fileResourceName, projectName, repoName) {
         fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
         resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
         prompt = 'hasMany';
-    }
-    else if (lowerCaseInput.startsWith('belongsto')) {
-        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(input.split(' ')[1]));
-        prompt = 'belongsTo';
-    }
-    else if (lowerCaseInput.includes(' belongsto ')) {
-        const [first, belongsto, second] = input.split(' ');
-        fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
-        resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
-        prompt = 'belongsTo';
     }
     // notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive
     else {

@@ -206,7 +206,7 @@ export default async function handleModel(input: string, fileResourceName: strin
     // hasOne cartItem
     if (lowerCaseInput.startsWith('hasone')) {
         resourceName = unpluralize(uncapitalize(input.split(' ')[1]));
-        prompt = 'hasone'
+        prompt = 'hasOne'
     }
 
     // product hasone image
@@ -216,7 +216,7 @@ export default async function handleModel(input: string, fileResourceName: strin
 
         fileResourceName = unpluralize(uncapitalize(first));
         resourceName = unpluralize(uncapitalize(second));
-        prompt = 'hasone';
+        prompt = 'hasOne';
     }
 
     // hasMany images
@@ -234,19 +234,6 @@ export default async function handleModel(input: string, fileResourceName: strin
         fileResourceName = unpluralize(uncapitalize(first));
         resourceName = unpluralize(uncapitalize(second));
         prompt = 'hasMany';
-    }
-
-    else if (lowerCaseInput.startsWith('belongsto')) {
-        resourceName = unpluralize(uncapitalize(input.split(' ')[1]));
-        prompt = 'belongsTo'
-    }
-
-    else if (lowerCaseInput.includes(' belongsto ')) {
-        const [first, belongsto, second] = input.split(' ');
-
-        fileResourceName = unpluralize(uncapitalize(first));
-        resourceName = unpluralize(uncapitalize(second));
-        prompt = 'belongsTo';
     }
 
     // notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive

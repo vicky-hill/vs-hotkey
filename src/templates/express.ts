@@ -1,6 +1,6 @@
 // Controllers
 
-export const GET_ALL_CONTROLLER_TYPESCRIPT = `export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
+export const GET_ALL_CONTROLLER = `export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const products = await FileResourceName.getProducts();
     res.json(products)
@@ -9,7 +9,7 @@ export const GET_ALL_CONTROLLER_TYPESCRIPT = `export const getProducts = async (
   }
 }`
 
-export const GET_BY_CONTROLLER_TYPESCRIPT = `export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
+export const GET_BY_CONTROLLER = `export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { productId } = req.params;
     
@@ -20,7 +20,7 @@ export const GET_BY_CONTROLLER_TYPESCRIPT = `export const getProductById = async
   }
 }`
 
-export const CREATE_CONTROLLER_TYPESCRIPT = `export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
+export const CREATE_CONTROLLER = `export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {    
     const product = await FileResourceName.createProduct(req.body);
     res.json(product)
@@ -29,7 +29,7 @@ export const CREATE_CONTROLLER_TYPESCRIPT = `export const createProduct = async 
   }
 }`
 
-export const UPDATE_CONTROLLER_TYPESCRIPT = `export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+export const UPDATE_CONTROLLER = `export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { productId } = req.params;
     
@@ -40,7 +40,7 @@ export const UPDATE_CONTROLLER_TYPESCRIPT = `export const updateProduct = async 
   }
 }`
 
-export const DELETE_CONTROLLER_TYPESCRIPT = `export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+export const DELETE_CONTROLLER = `export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { productId } = req.params;
     
@@ -51,7 +51,7 @@ export const DELETE_CONTROLLER_TYPESCRIPT = `export const deleteProduct = async 
   }
 }`
 
-export const CUSTOM_CONTROLLER_TYPESCRIPT = `export const functionName = async (req: Request, res: Response, next: NextFunction) => {
+export const CUSTOM_CONTROLLER = `export const functionName = async (req: Request, res: Response, next: NextFunction) => {
   try {    
     const result = await FileResourceName.functionName();
     res.json(result)
@@ -62,7 +62,7 @@ export const CUSTOM_CONTROLLER_TYPESCRIPT = `export const functionName = async (
 
 // Functions 
 
-export const GET_ALL_FUNCTIONS_TYPESCRIPT = `export const getProducts = async () => {
+export const GET_ALL_FUNCTIONS = `export const getProducts = async () => {
     const productInstances = await ProductModel.findAll({
         where: {} 
     });
@@ -75,7 +75,7 @@ export const GET_ALL_FUNCTIONS_TYPESCRIPT = `export const getProducts = async ()
     return products;
 }`
 
-export const GET_BY_FUNCTIONS_TYPESCRIPT = `export const getProductById = async (productId: string) => {
+export const GET_BY_FUNCTIONS = `export const getProductById = async (productId: string) => {
     const productInstance = await ProductModel.findByPk(productId, {
 
     });
@@ -86,13 +86,13 @@ export const GET_BY_FUNCTIONS_TYPESCRIPT = `export const getProductById = async 
     return product;
 }`
 
-export const CREATE_FUNCTIONS_TYPESCRIPT = `export const createProduct = async (data: Product) => {
+export const CREATE_FUNCTIONS = `export const createProduct = async (data: Product) => {
     const product = await ProductModel.create(data);
 
     return product;
 }`
 
-export const UPDATE_FUNCTIONS_TYPESCRIPT = `export const updateProduct = async (data: Product, productId: string) => {
+export const UPDATE_FUNCTIONS = `export const updateProduct = async (data: Product, productId: string) => {
     await ProductModel.update(
       data,
       { where: { productId } }
@@ -104,54 +104,54 @@ export const UPDATE_FUNCTIONS_TYPESCRIPT = `export const updateProduct = async (
     return product;
 }`
 
-export const DELETE_FUNCTIONS_TYPESCRIPT = `export const deleteProduct = async (productId: string) => {
+export const DELETE_FUNCTIONS = `export const deleteProduct = async (productId: string) => {
     await ProductModel.destroy({ where: { productId }});
     return { productId };
 }`
 
-export const CUSTOM_FUNCTIONS_TYPESCRIPT = `export const functionName = async () => {
+export const CUSTOM_FUNCTIONS = `export const functionName = async () => {
 
 }`
 
-export const CONTROLLER_TYPESCRIPT_FULL = `import { Request, Response, NextFunction } from 'express'
+export const CONTROLLER_FULL = `import { Request, Response, NextFunction } from 'express'
 import * as Product from './products.functions'
 
-${GET_ALL_CONTROLLER_TYPESCRIPT}
+${GET_ALL_CONTROLLER}
 
-${GET_BY_CONTROLLER_TYPESCRIPT}
+${GET_BY_CONTROLLER}
 
-${CREATE_CONTROLLER_TYPESCRIPT}
+${CREATE_CONTROLLER}
 
-${UPDATE_CONTROLLER_TYPESCRIPT}
+${UPDATE_CONTROLLER}
 
-${DELETE_CONTROLLER_TYPESCRIPT}
+${DELETE_CONTROLLER}
 `
 
-export const CONTROLLER_TYPESCRIPT_EMPTY = `import { Request, Response, NextFunction } from 'express'
+export const CONTROLLER_EMPTY = `import { Request, Response, NextFunction } from 'express'
 import * as Product from './products.functions'
 
-${GET_ALL_CONTROLLER_TYPESCRIPT}
+${GET_ALL_CONTROLLER}
 `
 
-export const FUNCTIONS_TYPESCRIPT_FULL = `import ProductModel, { Product } from './products.model
+export const FUNCTIONS_FULL = `import ProductModel, { Product } from './products.model'
 
-${GET_ALL_FUNCTIONS_TYPESCRIPT}
+${GET_ALL_FUNCTIONS}
 
-${GET_BY_FUNCTIONS_TYPESCRIPT}
+${GET_BY_FUNCTIONS}
 
-${CREATE_FUNCTIONS_TYPESCRIPT}
+${CREATE_FUNCTIONS}
 
-${UPDATE_FUNCTIONS_TYPESCRIPT}
+${UPDATE_FUNCTIONS}
 
-${DELETE_FUNCTIONS_TYPESCRIPT}
+${DELETE_FUNCTIONS}
 `
 
-export const FUNCTIONS_TYPESCRIPT_EMPTY = `import ProductModel, { Product } from './products.model'
+export const FUNCTIONS_EMPTY = `import ProductModel, { Product } from './products.model'
 
-${GET_ALL_FUNCTIONS_TYPESCRIPT}
+${GET_ALL_FUNCTIONS}
 `
 
-export const ROUTES_TYPESCRIPT_EMPTY = `import express, { Router } from 'express'
+export const ROUTES_EMPTY = `import express, { Router } from 'express'
 import { getProducts } from './products.controller'
 
 const router: Router = express.Router();
@@ -166,7 +166,7 @@ router.route('/').get(getProducts)
 export default router;
 `
 
-export const ROUTES_TYPESCRIPT_FULL = `import express, { Router } from 'express'
+export const ROUTES_FULL = `import express, { Router } from 'express'
 import { getProducts, getProductById, createProduct, updateProduct, deleteProduct } from './products.controller'
 
 const router: Router = express.Router();
@@ -186,32 +186,44 @@ router.route('/:productId').delete(deleteProduct)
 export default router;
 `
 
-export const MODEL_HAS_ONE_TYPESCRIPT = `FileResourceNameModel.hasOne(ProductModel, {
+export const MODEL_HAS_ONE = `FileResourceNameModel.hasOne(ProductModel, {
     foreignKey: 'productId',
-    sourceKey: 'productId',
     as: 'product'
 });
-`
 
-export const MODEL_HAS_MANY_TYPESCRIPT = `FileResourceNameModel.hasMany(ProductModel, {
-    foreignKey: 'fileResourceNameId',
-    as: 'products',
-    onDelete: 'CASCADE'
-});
-`
-
-export const MODEL_BELONGS_TO_TYPESCRIPT = `FileResourceNameModel.belongsTo(ProductModel, {
+ProductModel.belongsTo(FileResourceNameModel, {
   foreignKey: 'productId',
-  as: 'product'
+  as: 'fileResourceName',
+  onDelete: 'CASCADE'
 })
 `
 
-export const INCLUDE_FULL_TYPESCRIPT = `      include: [{
-        model: ProductModel,
-        as: 'product'
-      }]`
+export const MODEL_HAS_MANY = `FileResourceNameModel.hasMany(ProductModel, {
+    foreignKey: 'fileResourceNameId',
+    as: 'products'
+});
 
-export const INCLUDE_PARTIAL_TYPESCRIPT = `,{
-        model: ProductModel,
-        as: 'product'
-      }`
+ProductModel.belongsTo(FileResourceNameModel, {
+    foreignKey: 'fileResourceNameId',
+    as: 'fileResourceName',
+    onDelete: 'CASCADE'
+})
+`
+
+export const INCLUDE_FULL = `        include: [{
+            model: ProductModel,
+            as: 'product'
+        }]`
+
+export const SEQUELIZE_FIND_BY_PK = `    const productInstance = await ProductModel.findByPk(productId)
+    
+    if (!productInstance) throw new Error('Product not found');
+    const product = productInstance.get({ plain: true });
+`
+export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS = `    const productInstance = await ProductModel.findByPk(productId, {
+        options
+    })
+    
+    if (!productInstance) throw new Error('Product not found');
+    const product = productInstance.get({ plain: true });
+`

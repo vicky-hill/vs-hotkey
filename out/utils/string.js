@@ -28,6 +28,9 @@ const pluralize = (value) => {
 };
 exports.pluralize = pluralize;
 const unpluralize = (value) => {
+    if (value.toLocaleLowerCase().endsWith("ies")) {
+        return `${value.slice(0, -3)}y`;
+    }
     if (value.toLowerCase().endsWith("s")) {
         return value.slice(0, -1);
     }
@@ -62,7 +65,7 @@ const getResource = (value, filename) => {
     return (0, exports.unpluralize)((0, exports.uncapitalize)(resource));
 };
 exports.getResource = getResource;
-const replaceResource = (template, resource, functionName, fileResourceName) => {
+const replaceResource = (template, resource, functionName, fileResourceName, options) => {
     let snippet = template
         .replaceAll("Product", (0, exports.unpluralize)((0, exports.capitalize)(resource)))
         .replaceAll("product", (0, exports.unpluralize)((0, exports.uncapitalize)(resource)))
@@ -76,6 +79,10 @@ const replaceResource = (template, resource, functionName, fileResourceName) => 
     if (functionName) {
         snippet = snippet
             .replaceAll("functionName", functionName);
+    }
+    if (options) {
+        snippet = snippet
+            .replace("options", options);
     }
     return snippet;
 };

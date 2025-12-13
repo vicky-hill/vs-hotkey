@@ -25,6 +25,10 @@ export const pluralize = (value: string) => {
 };
 
 export const unpluralize = (value: string) => {
+  if (value.toLocaleLowerCase().endsWith("ies")) {
+    return `${value.slice(0, -3)}y`;
+  }
+
   if (value.toLowerCase().endsWith("s")) {
     return value.slice(0, -1);
   }
@@ -57,7 +61,7 @@ export const getResource = (value: string, filename: string) => {
   return unpluralize(uncapitalize(resource));
 };
 
-export const replaceResource = (template: any, resource: string, functionName: string | null, fileResourceName: string | null) => {
+export const replaceResource = (template: any, resource: string, functionName: string | null, fileResourceName: string | null, options: string | null) => {
   let snippet = template
     .replaceAll("Product", unpluralize(capitalize(resource)))
     .replaceAll("product", unpluralize(uncapitalize(resource)))
@@ -74,7 +78,11 @@ export const replaceResource = (template: any, resource: string, functionName: s
     snippet = snippet
       .replaceAll("functionName", functionName)
   }
-  
+
+  if (options) {
+    snippet = snippet
+      .replace("options", options)
+  }
 
   return snippet;
 };
