@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.replaceResource = exports.getResource = exports.getPrompt = exports.unpluralize = exports.pluralize = exports.uncapitalize = exports.capitalize = exports.actions = void 0;
+const editor_1 = require("./editor");
 exports.actions = [
     "getAll",
     "getUser",
@@ -65,16 +66,19 @@ const getResource = (value, filename) => {
     return (0, exports.unpluralize)((0, exports.uncapitalize)(resource));
 };
 exports.getResource = getResource;
-const replaceResource = (template, resource, functionName, fileResourceName, options) => {
+const replaceResource = (template, resource, functionName, options, fileResourceName) => {
+    if (!fileResourceName) {
+        fileResourceName = (0, editor_1.getFileResourceName)();
+    }
     let snippet = template
         .replaceAll("Product", (0, exports.unpluralize)((0, exports.capitalize)(resource)))
         .replaceAll("product", (0, exports.unpluralize)((0, exports.uncapitalize)(resource)))
         .replaceAll("Products", (0, exports.pluralize)((0, exports.capitalize)(resource)))
-        .replaceAll("products", (0, exports.pluralize)((0, exports.uncapitalize)(resource)));
+        .replaceAll("products", (0, exports.pluralize)((0, exports.uncapitalize)(resource)))
+        .replaceAll("FileResourceName", (0, exports.unpluralize)((0, exports.capitalize)(fileResourceName)))
+        .replaceAll("fileResourceName", (0, exports.unpluralize)((0, exports.uncapitalize)(fileResourceName)));
     if (fileResourceName) {
-        snippet = snippet
-            .replaceAll("FileResourceName", (0, exports.unpluralize)((0, exports.capitalize)(fileResourceName)))
-            .replaceAll("fileResourceName", (0, exports.unpluralize)((0, exports.uncapitalize)(fileResourceName)));
+        snippet = snippet;
     }
     if (functionName) {
         snippet = snippet
@@ -82,7 +86,7 @@ const replaceResource = (template, resource, functionName, fileResourceName, opt
     }
     if (options) {
         snippet = snippet
-            .replace("options", options);
+            .replace("~options~", options);
     }
     return snippet;
 };

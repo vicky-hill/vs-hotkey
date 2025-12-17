@@ -1,3 +1,5 @@
+import { getFileResourceName } from './editor';
+
 export const actions = [
   "getAll",
   "getUser",
@@ -61,17 +63,22 @@ export const getResource = (value: string, filename: string) => {
   return unpluralize(uncapitalize(resource));
 };
 
-export const replaceResource = (template: any, resource: string, functionName: string | null, fileResourceName: string | null, options: string | null) => {
+export const replaceResource = (template: any, resource: string, functionName: string | null, options: string | null, fileResourceName: string | null) => {
+  if (!fileResourceName) {
+    fileResourceName = getFileResourceName();
+  }
+
   let snippet = template
     .replaceAll("Product", unpluralize(capitalize(resource)))
     .replaceAll("product", unpluralize(uncapitalize(resource)))
     .replaceAll("Products", pluralize(capitalize(resource)))
     .replaceAll("products", pluralize(uncapitalize(resource)))
+    .replaceAll("FileResourceName", unpluralize(capitalize(fileResourceName)))
+    .replaceAll("fileResourceName", unpluralize(uncapitalize(fileResourceName)))
 
   if (fileResourceName) {
     snippet = snippet
-      .replaceAll("FileResourceName", unpluralize(capitalize(fileResourceName)))
-      .replaceAll("fileResourceName", unpluralize(uncapitalize(fileResourceName)))
+
   }
 
   if (functionName) {
@@ -81,7 +88,7 @@ export const replaceResource = (template: any, resource: string, functionName: s
 
   if (options) {
     snippet = snippet
-      .replace("options", options)
+      .replace("~options~", options)
   }
 
   return snippet;

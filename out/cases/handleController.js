@@ -4,11 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = handleController;
+const editor_1 = require("../utils/editor");
 const generateSnippet_1 = __importDefault(require("../utils/generateSnippet"));
 const string_1 = require("../utils/string");
-async function handleController(input, fileResourceName) {
+const insertSnippet_1 = __importDefault(require("../utils/insertSnippet"));
+async function handleController(input) {
     const lowerCaseInput = input.toLocaleLowerCase();
-    let resourceName = '';
+    const fileResourceName = (0, editor_1.getFileResourceName)();
+    let resourceName = fileResourceName;
     let functionName = '';
     let prompt = '';
     if (['full', 'empty', 'get', 'getall', 'getone', 'getby', 'getbyid', 'create', 'update', 'delete'].includes(lowerCaseInput)) {
@@ -30,6 +33,34 @@ async function handleController(input, fileResourceName) {
         const match2 = input.match(/^get(.*)/i);
         resourceName = match1 ? (0, string_1.uncapitalize)(match1[1]) : match2 ? (0, string_1.uncapitalize)(match2[1]) : fileResourceName;
         prompt = 'getBy';
+        // f full
+        // e empty
+        // g get
+        // c create
+        // u update
+        // d delete
+    }
+    else if (['f', 'e', 'g', 'c', 'u', 'd'].includes(input)) {
+        switch (input) {
+            case 'f':
+                prompt = 'full';
+                break;
+            case 'e':
+                prompt = 'empty';
+                break;
+            case 'g':
+                prompt = 'get';
+                break;
+            case 'c':
+                prompt = 'create';
+                break;
+            case 'u':
+                prompt = 'update';
+                break;
+            case 'd':
+                prompt = 'delete';
+                break;
+        }
     }
     else {
         // getProducts
@@ -56,9 +87,25 @@ async function handleController(input, fileResourceName) {
             prompt = 'delete';
             resourceName = input.replace('delete', '');
         }
+        // p params
+        else if (input === 'p') {
+            await (0, insertSnippet_1.default)('    const {  } = req.params;');
+            return;
+        }
+        // q query
+        else if (input === 'q') {
+            await (0, insertSnippet_1.default)('    const {  } = req.query;');
+            return;
+        }
+        // i userId
+        else if (input === 'i') {
+            await (0, insertSnippet_1.default)('    const { userId } = req.user;');
+            return;
+        }
         else {
             // sendMessage
             // applyCodeToCart
+            // options: p params, q query, i userId
             resourceName = fileResourceName;
             functionName = input.replace(/^--\s*/, "");
             prompt = 'custom';
@@ -68,8 +115,7 @@ async function handleController(input, fileResourceName) {
         type: 'controller',
         prompt,
         resourceName,
-        functionName,
-        fileResourceName
+        functionName
     });
 }
 //# sourceMappingURL=handleController.js.map

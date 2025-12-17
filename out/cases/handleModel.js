@@ -7,6 +7,7 @@ exports.default = handleModel;
 const insertSnippet_1 = __importDefault(require("../utils/insertSnippet"));
 const string_1 = require("../utils/string");
 const generateSnippet_1 = __importDefault(require("../utils/generateSnippet"));
+const editor_1 = require("../utils/editor");
 const generateModel = async (input, modelName, projectName, repoName) => {
     // const fields = input.replace(/ /g, "").split(",");
     const fields = input.split(' ');
@@ -171,8 +172,11 @@ export default ${className};
 `;
     await (0, insertSnippet_1.default)(snippet);
 };
-async function handleModel(input, fileResourceName, projectName, repoName) {
+async function handleModel(input) {
     const lowerCaseInput = input.toLocaleLowerCase();
+    const projectName = (0, editor_1.getProjectName)();
+    const repoName = (0, editor_1.getRepoName)();
+    let fileResourceName = (0, editor_1.getFileResourceName)();
     let resourceName = '';
     let prompt = '';
     let functionName = '';
@@ -203,6 +207,40 @@ async function handleModel(input, fileResourceName, projectName, repoName) {
         const [first, hasMany, second] = input.split(' ');
         fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
         resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
+        prompt = 'hasMany';
+    }
+    // profile belongsto user
+    // posts belongsto user
+    // belongsto user
+    else if (lowerCaseInput.includes('belongsto')) {
+        // profile belongsto user
+        if (input.split(' ').length === 3) {
+            const [first, belongsto, second] = input.split(' ');
+            fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
+            resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
+            prompt = first.endsWith('s') ? 'hasMany' : 'hasOne';
+        }
+        // belongsto user
+        else {
+            resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(fileResourceName));
+            fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(input.split(' ')[1]));
+            prompt = 'hasOne';
+        }
+    }
+    // posts belongto user
+    // belongto user
+    else if (lowerCaseInput.includes('belongto')) {
+        // posts belongto user
+        if (input.split(' ').length === 3) {
+            const [first, belongsto, second] = input.split(' ');
+            fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(second));
+            resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(first));
+        }
+        // belongto user
+        else {
+            resourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(fileResourceName));
+            fileResourceName = (0, string_1.unpluralize)((0, string_1.uncapitalize)(input.split(' ')[1]));
+        }
         prompt = 'hasMany';
     }
     // notes, userId, layoutId, text, #sort, .price, ?deleted, :status:active:inactive

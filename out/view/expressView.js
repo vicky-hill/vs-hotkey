@@ -49,6 +49,11 @@ exports.default = `
                     <p>findByPk, findbypk, product findbypk</p>
                     <p>findByPk i a o</p>
                     <p>findByPk i post a userId, name o createdAt</p>
+                  
+                    <p>include, i, include post, i user posts profile</p>
+                    <p>attributes, a, attributes userId name, a userId name age</p>
+                    <p>order, o, order productId, o productId</p>
+                    <p>where, w, where userId active, w userId active</p>
                 </div>
                 <div>
                     <h3>Model</h3>
@@ -56,6 +61,9 @@ exports.default = `
                     <p>hasone profile, user hasone profile</p>
                     <p>hasMany posts, user hasMany posts</p>
                     <p>include, include user, include posts | i, i user, i posts</p>
+                    <p>findbypk, pk, user findbypk, user pk, i a o</p>
+                    <p>findone, one, user findOne, user one, i a o</p>
+                    <p>findall, all, post findall, post all, w i a o </p>
                 </div>
 			</body>
 			</html>

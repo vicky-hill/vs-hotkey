@@ -210,20 +210,98 @@ ProductModel.belongsTo(FileResourceNameModel, {
 })
 `
 
-export const INCLUDE_FULL = `        include: [{
-            model: ProductModel,
-            as: 'product'
-        }]`
 
-export const SEQUELIZE_FIND_BY_PK = `    const productInstance = await ProductModel.findByPk(productId)
+// FIND_BY_PK
+export const SEQUELIZE_FIND_BY_PK = `    const product = await ProductModel.findByPk(productId)
+    
+    if (!product) throw new Error('Product not found');
+`
+export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS = `    const product = await ProductModel.findByPk(productId, {
+        ~options~
+    })
+    
+    if (!product) throw new Error('Product not found');
+    `
+
+export const SEQUELIZE_FIND_BY_PK_PLAIN = `    const productInstance = await ProductModel.findByPk(productId)
     
     if (!productInstance) throw new Error('Product not found');
     const product = productInstance.get({ plain: true });
-`
-export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS = `    const productInstance = await ProductModel.findByPk(productId, {
-        options
+    `
+export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN = `    const productInstance = await ProductModel.findByPk(productId, {
+        ~options~
     })
     
     if (!productInstance) throw new Error('Product not found');
     const product = productInstance.get({ plain: true });
-`
+    `
+
+// FIND_ONE
+export const SEQUELIZE_FIND_ONE = `    const product = await ProductModel.findOne({
+        where: { }
+    })
+    `
+
+export const SEQUELIZE_FIND_ONE_WITH_OPTIONS = `    const product = await ProductModel.findOne({
+        where: { },
+        ~options~
+    })
+    `
+
+export const SEQUELIZE_FIND_ONE_PLAIN = `    const productInstance = await ProductModel.findOne({
+        where: { }
+    })
+
+    if (!productInstance) throw new Error('Product not found');
+    const product = productInstance.get({ plain: true });
+    `
+
+export const SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN = `    const productInstance = await ProductModel.findOne({
+        where: { },
+        ~options~
+    })
+        
+    if (!productInstance) throw new Error('Product not found');
+    const product = productInstance.get({ plain: true });
+    `
+
+// FIND_ALL
+export const SEQUELIZE_FIND_ALL = `    const products = await ProductModel.findAll();
+    `
+
+export const SEQUELIZE_FIND_ALL_WITH_OPTIONS = `    const products = await ProductModel.findAll({
+        ~options~
+    })
+    `
+
+export const SEQUELIZE_FIND_ALL_PLAIN = `    const productInstances = await ProductModel.findAll();
+
+    const products = productInstances.map((productInstance) => {
+        const product = productInstance.get({ plain: true });
+        return { ...product };
+    })
+    `
+
+export const SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN = `    const productInstances = await ProductModel.findAll({
+        ~options~
+    })
+        
+   const products = productInstances.map((productInstance) => {
+        const product = productInstance.get({ plain: true });
+        return { ...product };
+    })
+    `
+
+// CREATE, UPDATE, DELETE
+
+export const SEQUELIZE_CREATE = `    const product = await ProductModel.create()`
+
+
+export const SEQUELIZE_UPDATE = `    await ProductModel.update(
+      { },
+      { where: { productId } }
+    );
+    `
+
+export const SEQUELIZE_DELETE = `    await ProductModel.destroy({ where: { }})`
+

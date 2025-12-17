@@ -2,7 +2,7 @@
 import { FileType } from '../extension';
 import templates from '../templates'
 import insertSnippet from './insertSnippet'
-import { getPrompt, getResource, replaceResource } from './string'
+import { replaceResource } from './string'
 
 interface GenerateSnippet {
   type: FileType
@@ -13,16 +13,16 @@ interface GenerateSnippet {
   fileResourceName?: string
 }
 
-const generateSnippet = async ({ type, prompt, resourceName, functionName, fileResourceName, options} : GenerateSnippet) => {
+const generateSnippet = async ({ type, prompt, resourceName, functionName, options, fileResourceName} : GenerateSnippet) => {
   const template = templates.find(template => template.type === type && template.prompt === prompt);
   if (!template) return null;
 
   const snippetText = replaceResource(
       template.template, 
       resourceName, 
-      functionName || null, 
-      fileResourceName || null,
-      options || null
+      functionName || null,
+      options || null,
+      fileResourceName || null
     );
   await insertSnippet(snippetText)
 }

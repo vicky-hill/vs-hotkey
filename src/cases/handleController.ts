@@ -1,12 +1,14 @@
+import { getFileResourceName } from '../utils/editor'
 import generateSnippet from '../utils/generateSnippet'
-import { uncapitalize, capitalize, unpluralize } from '../utils/string';
+import { uncapitalize } from '../utils/string'
 import insertSnippet from '../utils/insertSnippet';
-import templates from '../templates';
 
-export default async function handleController(input: string, fileResourceName: string) {
+
+export default async function handleController(input: string) {
     const lowerCaseInput = input.toLocaleLowerCase();
+    const fileResourceName = getFileResourceName();
 
-    let resourceName = '';
+    let resourceName = fileResourceName;
     let functionName = '';
     let prompt = '';
 
@@ -32,6 +34,34 @@ export default async function handleController(input: string, fileResourceName: 
         const match2 = input.match(/^get(.*)/i);
         resourceName = match1 ? uncapitalize(match1[1]) : match2 ? uncapitalize(match2[1]) : fileResourceName;
         prompt = 'getBy'
+
+        // f full
+        // e empty
+        // g get
+        // c create
+        // u update
+        // d delete
+    } else if (['f', 'e', 'g', 'c', 'u', 'd'].includes(input)) {
+        switch (input) {
+            case 'f':
+                prompt = 'full'
+                break;
+            case 'e':
+                prompt = 'empty'
+                break;
+            case 'g':
+                prompt = 'get'
+                break;
+            case 'c':
+                prompt = 'create'
+                break;
+            case 'u':
+                prompt = 'update'
+                break;
+            case 'd':
+                prompt = 'delete'
+                break;
+        }
 
     } else {
 
@@ -63,9 +93,30 @@ export default async function handleController(input: string, fileResourceName: 
             resourceName = input.replace('delete', '');
         }
 
+        // p params
+        else if (input === 'p') {
+            await insertSnippet('    const {  } = req.params;');
+            return;
+        }
+
+        // q query
+        else if (input === 'q') {
+            await insertSnippet('    const {  } = req.query;');
+            return;
+        }
+
+        // i userId
+        else if (input === 'i') {
+            await insertSnippet('    const { userId } = req.user;');
+            return;
+        }
+
+   
+
         else {
             // sendMessage
             // applyCodeToCart
+            // options: p params, q query, i userId
             resourceName = fileResourceName
             functionName = input.replace(/^--\s*/, "")
             prompt = 'custom'
@@ -76,7 +127,6 @@ export default async function handleController(input: string, fileResourceName: 
         type: 'controller',
         prompt,
         resourceName,
-        functionName,
-        fileResourceName
+        functionName
     });
 }

@@ -1,6 +1,7 @@
 import { FileType } from '../extension'
 import { capitalize, uncapitalize, unpluralize } from './string';
-type OptionLetter = "i" | "a" | "o" | "w" | "p" | "b" | "q" | "p" 
+import * as vscode from 'vscode';
+type OptionLetter = "i" | "a" | "o" | "w" | "p" | "b" | "q" | "p"
 
 interface Option {
     name: string
@@ -12,7 +13,7 @@ interface Option {
     i include
     a attributes
     o order
-    
+    p plain
 */
 
 /* Controller options
@@ -20,6 +21,24 @@ interface Option {
     q query
     b body
 */
+
+export const isOption = (string: string) => {
+    const editor = vscode.window.activeTextEditor;
+
+    if (!editor) {
+        console.log('No editor')
+        return;
+    }
+
+    const filename = editor.document.fileName.split('/').pop() || 'untitled';
+    const fileType: FileType = filename.split('.')[1] as FileType;
+
+    if (fileType === 'functions' || fileType === 'utils') {
+        return ['include', 'attributes', 'where', 'i', 'a', 'w', 'o', 'p'].includes(string);
+    }
+
+    return false;
+}
 
 
 export default function getPromptOptions(prompt: string, fileType: FileType) {
@@ -55,8 +74,16 @@ export default function getPromptOptions(prompt: string, fileType: FileType) {
         return option;
     };
 
-    if (prompt.includes("findbypk")) {
-        const fields = prompt.replaceAll(",", "").split(" ");
+    if (fileType === 'functions') {
+        const fields = prompt
+            .replaceAll(",", "")
+            .replaceAll(" p ", "")
+            .replaceAll("  ", " ")
+            .replaceAll("include", "i")
+            .replaceAll("attributes", "a")
+            .replaceAll("where", "w")
+            .split(" ");
+
         const options: Option[] = [];
 
         let currentOption: Option | null = null;
@@ -109,17 +136,20 @@ export default function getPromptOptions(prompt: string, fileType: FileType) {
 }
 
 export const getFindQueryOptions = (promptOptions: Option[]) => {
-    const getAttributeFields = (fields: string[]) => {
-        if (!fields?.length) return `        attributes: [],`;
+    const getAttributeFields = (fields: string[], isFirst: boolean) => {
+        const space = isFirst ? '' : '        ';
+        if (!fields?.length) return `${space}attributes: [],`;
 
         const stringFields = fields.map((field) => `'${field}'`).join(", ");
 
-        return `        attributes: [${stringFields}],`;
+        return `${space}attributes: [${stringFields}],`;
     };
 
-    const getIncludeFields = (fields: string[]) => {
+    const getIncludeFields = (fields: string[], isFirst: boolean) => {
+        const space = isFirst ? '' : '        ';
+
         if (!fields?.length)
-            return `include: [
+            return `${space}include: [
             {
                 model: ,
                 as: ''
@@ -141,37 +171,45 @@ export const getFindQueryOptions = (promptOptions: Option[]) => {
             })
             .join("\n");
 
-        return `include: [
+        return `${space}include: [
     ${stringFields}
         ],`;
     };
 
-    const getWhereFields = (fields: string[]) => {
+    const getWhereFields = (fields: string[], isFirst: boolean) => {
+        const space = isFirst ? '' : '        ';
+
         if (!fields?.length) {
-            return "   where: { }";
+            return `${space}where: { },`;
         }
+
+        const stringFields = fields.map((field) => `${field}`).join(", ");
+        return `${space}where: { ${stringFields} },`
     };
 
-    const getOrderFields = (fields: string[]) => {
+    const getOrderFields = (fields: string[], isFirst: boolean) => {
+        const space = isFirst ? '' : '        ';
+
         if (!fields?.length) {
-            return "        order: [['createdAt', 'DESC']]";
+            return `${space}order: [['createdAt', 'DESC']]`;
         }
 
         const stringFields = fields.map((field) => `['${field}', 'DESC']`).join(", ");
-        return `        order: [${stringFields}]`;
+        return `${space}order: [${stringFields}]`;
     };
 
     const stringOptions = promptOptions
-        .map((f) => {
+        .map((f, i) => {
+            const isFirst = i === 0;
             switch (f.name) {
                 case "where":
-                    return getWhereFields(f.fields);
+                    return getWhereFields(f.fields, isFirst);
                 case "include":
-                    return getIncludeFields(f.fields);
+                    return getIncludeFields(f.fields, isFirst);
                 case "attributes":
-                    return getAttributeFields(f.fields);
+                    return getAttributeFields(f.fields, isFirst);
                 case "order":
-                    return getOrderFields(f.fields);
+                    return getOrderFields(f.fields, isFirst);
             }
         })
         .join("\n");

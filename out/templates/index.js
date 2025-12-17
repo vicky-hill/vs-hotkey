@@ -18,22 +18,25 @@ const templates = [
     { source: 'express', typescript: true, type: 'functions', prompt: 'full', template: express_1.FUNCTIONS_FULL },
     { source: 'express', typescript: true, type: 'functions', prompt: 'empty', template: express_1.FUNCTIONS_EMPTY },
     { source: 'express', typescript: true, type: 'functions', prompt: 'custom', template: express_1.CUSTOM_FUNCTIONS },
-    { source: 'express', typescript: true, type: 'functions', prompt: 'include', template: express_1.INCLUDE_FULL },
     { source: 'express', typescript: true, type: 'routes', prompt: 'empty', template: express_1.ROUTES_EMPTY },
     { source: 'express', typescript: true, type: 'routes', prompt: 'full', template: express_1.ROUTES_FULL },
     { source: 'express', typescript: true, type: 'model', prompt: 'hasOne', template: express_1.MODEL_HAS_ONE },
     { source: 'express', typescript: true, type: 'model', prompt: 'hasMany', template: express_1.MODEL_HAS_MANY },
     { source: 'express', typescript: true, type: 'functions', prompt: 'findByPk', template: express_1.SEQUELIZE_FIND_BY_PK },
     { source: 'express', typescript: true, type: 'functions', prompt: 'findByPkWithOptions', template: express_1.SEQUELIZE_FIND_BY_PK_WITH_OPTIONS },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findByPkPlain', template: express_1.SEQUELIZE_FIND_BY_PK_PLAIN },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findByPkWithOptionsPlain', template: express_1.SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findOne', template: express_1.SEQUELIZE_FIND_ONE },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findOneWithOptions', template: express_1.SEQUELIZE_FIND_ONE_WITH_OPTIONS },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findOnePlain', template: express_1.SEQUELIZE_FIND_ONE_PLAIN },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findOneWithOptionsPlain', template: express_1.SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findAll', template: express_1.SEQUELIZE_FIND_ALL },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findAllWithOptions', template: express_1.SEQUELIZE_FIND_ALL_WITH_OPTIONS },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findAllPlain', template: express_1.SEQUELIZE_FIND_ALL_PLAIN },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'findAllWithOptionsPlain', template: express_1.SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'createMethod', template: express_1.SEQUELIZE_CREATE },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'updateMethod', template: express_1.SEQUELIZE_UPDATE },
+    { source: 'express', typescript: true, type: 'functions', prompt: 'deleteMethod', template: express_1.SEQUELIZE_DELETE },
 ];
-// const products = await ProductModel.findAll();
-// -- findall product
-// const productInstance = await ProductModel.findByPk(productId);
-// if (!productInstance) throw new Error('No product found');
-// const product = productInstance.get({ plain: true })
-// -- findbypk product where 
-// -- include product
-// -- hasone product
-// -- hasmany images
 exports.default = templates;
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,7 @@
 import insertSnippet from '../utils/insertSnippet';
 import { capitalize, pluralize, uncapitalize, unpluralize } from '../utils/string'
 import generateSnippet from '../utils/generateSnippet';
-import templates from '../templates';
+import { getFileResourceName, getProjectName, getRepoName } from '../utils/editor';
 
 interface Parsed {
     name: string
@@ -194,9 +194,13 @@ export default ${className};
     await insertSnippet(snippet);
 }
 
-export default async function handleModel(input: string, fileResourceName: string, projectName: string, repoName: string) {
+export default async function handleModel(input: string) {
     const lowerCaseInput = input.toLocaleLowerCase();
 
+    const projectName = getProjectName();
+    const repoName = getRepoName();
+
+    let fileResourceName = getFileResourceName();
     let resourceName = '';
     let prompt = '';
     let functionName = '';
@@ -233,6 +237,49 @@ export default async function handleModel(input: string, fileResourceName: strin
 
         fileResourceName = unpluralize(uncapitalize(first));
         resourceName = unpluralize(uncapitalize(second));
+        prompt = 'hasMany';
+    }
+
+    // profile belongsto user
+    // posts belongsto user
+    // belongsto user
+    else if (lowerCaseInput.includes('belongsto')) {
+        // profile belongsto user
+        if (input.split(' ').length === 3) {
+            const [first, belongsto, second] = input.split(' ');
+
+            fileResourceName = unpluralize(uncapitalize(second));
+            resourceName = unpluralize(uncapitalize(first));
+
+            prompt = first.endsWith('s') ? 'hasMany' : 'hasOne'
+        }
+
+        // belongsto user
+        else {
+            resourceName = unpluralize(uncapitalize(fileResourceName));
+            fileResourceName = unpluralize(uncapitalize(input.split(' ')[1]))
+
+            prompt = 'hasOne';
+        }
+    }
+
+    // posts belongto user
+    // belongto user
+    else if (lowerCaseInput.includes('belongto')) {
+        // posts belongto user
+        if (input.split(' ').length === 3) {
+            const [first, belongsto, second] = input.split(' ');
+
+            fileResourceName = unpluralize(uncapitalize(second));
+            resourceName = unpluralize(uncapitalize(first));
+        }
+
+        // belongto user
+        else {
+            resourceName = unpluralize(uncapitalize(fileResourceName));
+            fileResourceName = unpluralize(uncapitalize(input.split(' ')[1]))
+        }
+
         prompt = 'hasMany';
     }
 

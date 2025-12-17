@@ -6,8 +6,10 @@ import handleFunctions from './cases/handleFunctions'
 import handleModel from './cases/handleModel'
 import expressView from './view/expressView'
 import sequelizeView from './view/sequelizeView'
+import { getFileType } from './utils/editor'
+import handleRoutes from './cases/handleRoutes'
 
-export type FileType = 'controller' | 'functions' | 'routes' | 'model' | 'slice' | 'tsx'
+export type FileType = 'controller' | 'functions' | 'routes' | 'model' | 'utils' | 'slice' | 'tsx' | 'none'
 
 
 export function activate(context: vscode.ExtensionContext) {
@@ -26,26 +28,25 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const position = editor.selection.active;
 		const line = editor.document.lineAt(position.line);
-		const lineText = line.text.trim();
+		const lineText = line.text;
+
+		await vscode.env.clipboard.writeText(lineText.trim());
 
 		console.log(lineText)
 
 		const input = lineText.trim();
-		const filename = editor.document.fileName.split('/').pop() || 'untitled';
+		const untrimmedInput = lineText.trimEnd();
 
-		const fileResourceName: string = filename.split('.')[0];
-		const fileType: FileType = filename.split('.')[1] as FileType;
-		const projectName = path.basename(path.dirname(path.dirname(editor.document.fileName)));
-		const repoName = path.basename(vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '');
-
-		// Delete the trigger text
 		await editor.edit(editBuilder => {
 			editBuilder.delete(line.range);
 		});
 
-		if (fileType === 'controller') await handleController(input, fileResourceName);
-		if (fileType === 'functions') await handleFunctions(input, fileResourceName);
-		if (fileType === 'model') await handleModel(input, fileResourceName, projectName, repoName);
+		const fileType = getFileType();
+
+		if (fileType === 'controller') await handleController(input);
+		if (fileType === 'functions') await handleFunctions(untrimmedInput);
+		if (fileType === 'model') await handleModel(input);
+		if (fileType === 'routes') await handleRoutes(input);
 	});
 
 	// Register the express prompts command

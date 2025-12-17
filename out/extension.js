@@ -46,6 +46,8 @@ const handleFunctions_1 = __importDefault(require("./cases/handleFunctions"));
 const handleModel_1 = __importDefault(require("./cases/handleModel"));
 const expressView_1 = __importDefault(require("./view/expressView"));
 const sequelizeView_1 = __importDefault(require("./view/sequelizeView"));
+const editor_1 = require("./utils/editor");
+const handleRoutes_1 = __importDefault(require("./cases/handleRoutes"));
 function activate(context) {
     console.log('Hot Key extension is now active!');
     // Register the hello world command
@@ -59,24 +61,23 @@ function activate(context) {
             return vscode.commands.executeCommand('type', { text: '\n' });
         const position = editor.selection.active;
         const line = editor.document.lineAt(position.line);
-        const lineText = line.text.trim();
+        const lineText = line.text;
+        await vscode.env.clipboard.writeText(lineText.trim());
         console.log(lineText);
         const input = lineText.trim();
-        const filename = editor.document.fileName.split('/').pop() || 'untitled';
-        const fileResourceName = filename.split('.')[0];
-        const fileType = filename.split('.')[1];
-        const projectName = path.basename(path.dirname(path.dirname(editor.document.fileName)));
-        const repoName = path.basename(vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '');
-        // Delete the trigger text
+        const untrimmedInput = lineText.trimEnd();
         await editor.edit(editBuilder => {
             editBuilder.delete(line.range);
         });
+        const fileType = (0, editor_1.getFileType)();
         if (fileType === 'controller')
-            await (0, handleController_1.default)(input, fileResourceName);
+            await (0, handleController_1.default)(input);
         if (fileType === 'functions')
-            await (0, handleFunctions_1.default)(input, fileResourceName);
+            await (0, handleFunctions_1.default)(untrimmedInput);
         if (fileType === 'model')
-            await (0, handleModel_1.default)(input, fileResourceName, projectName, repoName);
+            await (0, handleModel_1.default)(input);
+        if (fileType === 'routes')
+            await (0, handleRoutes_1.default)(input);
     });
     // Register the express prompts command
     const expressPrompts = vscode.commands.registerCommand('hotkey.expressPrompts', async () => {
