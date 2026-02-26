@@ -63,50 +63,45 @@ export const CUSTOM_CONTROLLER = `export const functionName = async (req: Reques
 // Functions 
 
 export const GET_ALL_FUNCTIONS = `export const getProducts = async () => {
-    const productInstances = await ProductModel.findAll({
+    const products = await Product.findAll({
         where: {} 
     });
-
-    const products = productInstances.map((productInstance) => {
-        const product = productInstance.get({ plain: true });
-        return { ...product };
-    })
 
     return products;
 }`
 
 export const GET_BY_FUNCTIONS = `export const getProductById = async (productId: string) => {
-    const productInstance = await ProductModel.findByPk(productId, {
+    const product = await Product.findByPk(productId);
 
-    });
+    if (!product) throw new Error('Product not found');
+ 
+    return product;
+}`
 
-    if (!productInstance) throw new Error('Product not found');
-    const product = productInstance.get({ plain: true });
+export const CREATE_FUNCTIONS = `export const createProduct = async (data: ProductAttributes) => {
+    const product = await Product.create(data);
 
     return product;
 }`
 
-export const CREATE_FUNCTIONS = `export const createProduct = async (data: Product) => {
-    const product = await ProductModel.create(data);
+export const UPDATE_FUNCTIONS = `export const updateProduct = async (data: ProductAttributes, productId: string) => {
+    const product = await Product.findByPk(productId);
 
-    return product;
-}`
-
-export const UPDATE_FUNCTIONS = `export const updateProduct = async (data: Product, productId: string) => {
-    await ProductModel.update(
-      data,
-      { where: { productId } }
-    );
-
-    const product = await ProductModel.findByPk(productId);
     if (!product) throw new Error('Product not found');
 
+    await product.update(data);
+    
     return product;
 }`
 
 export const DELETE_FUNCTIONS = `export const deleteProduct = async (productId: string) => {
-    await ProductModel.destroy({ where: { productId }});
-    return { productId };
+    const product = await Product.findByPk(productId);
+
+    if (!product) throw new Error('Product not found');
+
+    await product.destroy();
+
+    return product;
 }`
 
 export const CUSTOM_FUNCTIONS = `export const functionName = async () => {
@@ -133,7 +128,7 @@ import * as Product from './products.functions'
 ${GET_ALL_CONTROLLER}
 `
 
-export const FUNCTIONS_FULL = `import ProductModel, { Product } from './products.model'
+export const FUNCTIONS_FULL = `import Product, { ProductAttributes } from './products.model'
 
 ${GET_ALL_FUNCTIONS}
 
@@ -146,7 +141,7 @@ ${UPDATE_FUNCTIONS}
 ${DELETE_FUNCTIONS}
 `
 
-export const FUNCTIONS_EMPTY = `import ProductModel, { Product } from './products.model'
+export const FUNCTIONS_EMPTY = `import Product, { ProductAttributes } from './products.model'
 
 ${GET_ALL_FUNCTIONS}
 `
@@ -186,24 +181,24 @@ router.route('/:productId').delete(deleteProduct)
 export default router;
 `
 
-export const MODEL_HAS_ONE = `FileResourceNameModel.hasOne(ProductModel, {
-    foreignKey: 'productId',
+export const MODEL_HAS_ONE = `FileResourceName.hasOne(Product, {
+    foreignKey: 'fileResourceNameId',
     as: 'product'
 });
 
-ProductModel.belongsTo(FileResourceNameModel, {
-  foreignKey: 'productId',
+Product.belongsTo(FileResourceName, {
+  foreignKey: 'fileResourceNameId',
   as: 'fileResourceName',
   onDelete: 'CASCADE'
 })
 `
 
-export const MODEL_HAS_MANY = `FileResourceNameModel.hasMany(ProductModel, {
+export const MODEL_HAS_MANY = `FileResourceName.hasMany(Product, {
     foreignKey: 'fileResourceNameId',
     as: 'products'
 });
 
-ProductModel.belongsTo(FileResourceNameModel, {
+Product.belongsTo(FileResourceName, {
     foreignKey: 'fileResourceNameId',
     as: 'fileResourceName',
     onDelete: 'CASCADE'
@@ -212,23 +207,23 @@ ProductModel.belongsTo(FileResourceNameModel, {
 
 
 // FIND_BY_PK
-export const SEQUELIZE_FIND_BY_PK = `    const product = await ProductModel.findByPk(productId)
+export const SEQUELIZE_FIND_BY_PK = `    const product = await Product.findByPk(productId)
     
     if (!product) throw new Error('Product not found');
 `
-export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS = `    const product = await ProductModel.findByPk(productId, {
+export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS = `    const product = await Product.findByPk(productId, {
         ~options~
     })
     
     if (!product) throw new Error('Product not found');
     `
 
-export const SEQUELIZE_FIND_BY_PK_PLAIN = `    const productInstance = await ProductModel.findByPk(productId)
+export const SEQUELIZE_FIND_BY_PK_PLAIN = `    const productInstance = await Product.findByPk(productId)
     
     if (!productInstance) throw new Error('Product not found');
     const product = productInstance.get({ plain: true });
     `
-export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN = `    const productInstance = await ProductModel.findByPk(productId, {
+export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN = `    const productInstance = await Product.findByPk(productId, {
         ~options~
     })
     
@@ -237,18 +232,18 @@ export const SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN = `    const productInstanc
     `
 
 // FIND_ONE
-export const SEQUELIZE_FIND_ONE = `    const product = await ProductModel.findOne({
+export const SEQUELIZE_FIND_ONE = `    const product = await Product.findOne({
         where: { }
     })
     `
 
-export const SEQUELIZE_FIND_ONE_WITH_OPTIONS = `    const product = await ProductModel.findOne({
+export const SEQUELIZE_FIND_ONE_WITH_OPTIONS = `    const product = await Product.findOne({
         where: { },
         ~options~
     })
     `
 
-export const SEQUELIZE_FIND_ONE_PLAIN = `    const productInstance = await ProductModel.findOne({
+export const SEQUELIZE_FIND_ONE_PLAIN = `    const productInstance = await Product.findOne({
         where: { }
     })
 
@@ -256,7 +251,7 @@ export const SEQUELIZE_FIND_ONE_PLAIN = `    const productInstance = await Produ
     const product = productInstance.get({ plain: true });
     `
 
-export const SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN = `    const productInstance = await ProductModel.findOne({
+export const SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN = `    const productInstance = await Product.findOne({
         where: { },
         ~options~
     })
@@ -266,15 +261,15 @@ export const SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN = `    const productInstance 
     `
 
 // FIND_ALL
-export const SEQUELIZE_FIND_ALL = `    const products = await ProductModel.findAll();
+export const SEQUELIZE_FIND_ALL = `    const products = await Product.findAll();
     `
 
-export const SEQUELIZE_FIND_ALL_WITH_OPTIONS = `    const products = await ProductModel.findAll({
+export const SEQUELIZE_FIND_ALL_WITH_OPTIONS = `    const products = await Product.findAll({
         ~options~
     })
     `
 
-export const SEQUELIZE_FIND_ALL_PLAIN = `    const productInstances = await ProductModel.findAll();
+export const SEQUELIZE_FIND_ALL_PLAIN = `    const productInstances = await Product.findAll();
 
     const products = productInstances.map((productInstance) => {
         const product = productInstance.get({ plain: true });
@@ -282,7 +277,7 @@ export const SEQUELIZE_FIND_ALL_PLAIN = `    const productInstances = await Prod
     })
     `
 
-export const SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN = `    const productInstances = await ProductModel.findAll({
+export const SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN = `    const productInstances = await Product.findAll({
         ~options~
     })
         
@@ -294,14 +289,14 @@ export const SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN = `    const productInstances
 
 // CREATE, UPDATE, DELETE
 
-export const SEQUELIZE_CREATE = `    const product = await ProductModel.create()`
+export const SEQUELIZE_CREATE = `    const product = await Product.create()`
 
 
-export const SEQUELIZE_UPDATE = `    await ProductModel.update(
+export const SEQUELIZE_UPDATE = `    await Product.update(
       { },
       { where: { productId } }
     );
     `
 
-export const SEQUELIZE_DELETE = `    await ProductModel.destroy({ where: { }})`
+export const SEQUELIZE_DELETE = `    await Product.destroy({ where: { }})`
 

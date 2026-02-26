@@ -58,25 +58,17 @@ exports.CUSTOM_CONTROLLER = `export const functionName = async (req: Request, re
 }`;
 // Functions 
 exports.GET_ALL_FUNCTIONS = `export const getProducts = async () => {
-    const productInstances = await ProductModel.findAll({
+    const products = await ProductModel.findAll({
         where: {} 
     });
-
-    const products = productInstances.map((productInstance) => {
-        const product = productInstance.get({ plain: true });
-        return { ...product };
-    })
 
     return products;
 }`;
 exports.GET_BY_FUNCTIONS = `export const getProductById = async (productId: string) => {
-    const productInstance = await ProductModel.findByPk(productId, {
+    const product = await ProductModel.findByPk(productId);
 
-    });
-
-    if (!productInstance) throw new Error('Product not found');
-    const product = productInstance.get({ plain: true });
-
+    if (!product) throw new Error('Product not found');
+ 
     return product;
 }`;
 exports.CREATE_FUNCTIONS = `export const createProduct = async (data: Product) => {
@@ -85,19 +77,22 @@ exports.CREATE_FUNCTIONS = `export const createProduct = async (data: Product) =
     return product;
 }`;
 exports.UPDATE_FUNCTIONS = `export const updateProduct = async (data: Product, productId: string) => {
-    await ProductModel.update(
-      data,
-      { where: { productId } }
-    );
-
     const product = await ProductModel.findByPk(productId);
+
     if (!product) throw new Error('Product not found');
 
+    await product.update(data);
+    
     return product;
 }`;
 exports.DELETE_FUNCTIONS = `export const deleteProduct = async (productId: string) => {
-    await ProductModel.destroy({ where: { productId }});
-    return { productId };
+    const product = await ProductModel.findByPk(productId);
+
+    if (!product) throw new Error('Product not found');
+
+    await product.destroy();
+
+    return product;
 }`;
 exports.CUSTOM_FUNCTIONS = `export const functionName = async () => {
 
@@ -170,12 +165,12 @@ router.route('/:productId').delete(deleteProduct)
 export default router;
 `;
 exports.MODEL_HAS_ONE = `FileResourceNameModel.hasOne(ProductModel, {
-    foreignKey: 'productId',
+    foreignKey: 'fileResourceNameId',
     as: 'product'
 });
 
 ProductModel.belongsTo(FileResourceNameModel, {
-  foreignKey: 'productId',
+  foreignKey: 'fileResourceNameId',
   as: 'fileResourceName',
   onDelete: 'CASCADE'
 })

@@ -14,7 +14,6 @@ const generateModel = async (input, modelName, projectName, repoName) => {
     const className = `${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}Model`;
     const tableName = (0, string_1.uncapitalize)((0, string_1.pluralize)(modelName.replace("Model", "")));
     const schemaName = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Schema`;
-    const interfaceName = (0, string_1.capitalize)((0, string_1.unpluralize)(modelName));
     const id = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Id`;
     const shopApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../config/westgate.db.config'
@@ -86,6 +85,7 @@ import sequelize from '../../../config/${projectName}.db.config'`;
     const classFields = parsed
         .map((f, i) => {
         if (i === 0) {
+            return null;
             return `    declare ${id}: CreationOptional<number>`;
         }
         switch (f.type) {
@@ -100,6 +100,7 @@ import sequelize from '../../../config/${projectName}.db.config'`;
                 return `    declare ${f.name}: ${enumOptions(f.options, "type")}`;
         }
     })
+        .filter(f => f)
         .join("\n");
     // Generate Sequelize field schema
     const schemaFields = parsed
@@ -129,31 +130,14 @@ import sequelize from '../../../config/${projectName}.db.config'`;
         return `    ${name}: {\n        type: ${type}${extras}\n    }`;
     })
         .join(",\n");
-    const interfaceFields = parsed
-        .map((f, i) => {
-        if (i === 0) {
-            return `    ${id}: number`;
-        }
-        switch (f.type) {
-            case "string":
-                return `    ${f.name}: string`;
-            case "number":
-            case "decimal":
-                return `    ${f.name}: number`;
-            case "boolean":
-                return `    ${f.name}: boolean`;
-            case "enum":
-                return `    ${f.name}: ${enumOptions(f.options, "type")}`;
-        }
-    })
-        .join("\n");
     const snippet = `${imports}
 
-export interface ${interfaceName} {
-${interfaceFields}
-}
+export type omit = { omit: 'createdAt' | 'updatedAt' };    
 
-class ${className} extends Model<InferAttributes<${className}>, InferCreationAttributes<${className}>> {
+class ${className} extends Model<InferAttributes<${className}, omit>, InferCreationAttributes<${className}, omit>> {
+    declare ${id}: CreationOptional<number>
+    declare createdAt: CreationOptional<Date>
+    declare updatedAt: CreationOptional<Date>
 ${classFields}
 }
 
@@ -163,9 +147,9 @@ ${schemaFields}
 
 ${className}.init(${schemaName}, {
   sequelize,
-  modelName: "${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}",
+  modelName: "${(0, string_1.unpluralize)(modelName)}",
   tableName: "${tableName}",
-  timestamps: false
+  timestamps: true
 })
 
 export default ${className};
