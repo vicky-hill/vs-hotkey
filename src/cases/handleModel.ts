@@ -16,12 +16,12 @@ const generateModel = async (input: string, modelName: string, projectName: stri
     const className = `${capitalize(unpluralize(modelName))}`;
     const tableName = uncapitalize(pluralize(modelName));
     const schemaName = `${uncapitalize(unpluralize(modelName))}Schema`;
-    const id = `${uncapitalize(unpluralize(modelName))}Id`;
+    // const id = `${uncapitalize(unpluralize(modelName))}Id`;
+    const id = 'id';
 
     const shopApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../config/westgate.db.config'
     `
-
     const masterApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../../../config/${projectName}.db.config'`
 

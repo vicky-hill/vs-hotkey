@@ -58,26 +58,26 @@ exports.CUSTOM_CONTROLLER = `export const functionName = async (req: Request, re
 }`;
 // Functions 
 exports.GET_ALL_FUNCTIONS = `export const getProducts = async () => {
-    const products = await ProductModel.findAll({
+    const products = await Product.findAll({
         where: {} 
     });
 
     return products;
 }`;
 exports.GET_BY_FUNCTIONS = `export const getProductById = async (productId: string) => {
-    const product = await ProductModel.findByPk(productId);
+    const product = await Product.findByPk(productId);
 
     if (!product) throw new Error('Product not found');
  
     return product;
 }`;
-exports.CREATE_FUNCTIONS = `export const createProduct = async (data: Product) => {
-    const product = await ProductModel.create(data);
+exports.CREATE_FUNCTIONS = `export const createProduct = async (data: ProductAttributes) => {
+    const product = await Product.create(data);
 
     return product;
 }`;
-exports.UPDATE_FUNCTIONS = `export const updateProduct = async (data: Product, productId: string) => {
-    const product = await ProductModel.findByPk(productId);
+exports.UPDATE_FUNCTIONS = `export const updateProduct = async (data: ProductAttributes, productId: string) => {
+    const product = await Product.findByPk(productId);
 
     if (!product) throw new Error('Product not found');
 
@@ -86,7 +86,7 @@ exports.UPDATE_FUNCTIONS = `export const updateProduct = async (data: Product, p
     return product;
 }`;
 exports.DELETE_FUNCTIONS = `export const deleteProduct = async (productId: string) => {
-    const product = await ProductModel.findByPk(productId);
+    const product = await Product.findByPk(productId);
 
     if (!product) throw new Error('Product not found');
 
@@ -115,7 +115,7 @@ import * as Product from './products.functions'
 
 ${exports.GET_ALL_CONTROLLER}
 `;
-exports.FUNCTIONS_FULL = `import ProductModel, { Product } from './products.model'
+exports.FUNCTIONS_FULL = `import Product, { ProductAttributes } from './products.model'
 
 ${exports.GET_ALL_FUNCTIONS}
 
@@ -127,7 +127,7 @@ ${exports.UPDATE_FUNCTIONS}
 
 ${exports.DELETE_FUNCTIONS}
 `;
-exports.FUNCTIONS_EMPTY = `import ProductModel, { Product } from './products.model'
+exports.FUNCTIONS_EMPTY = `import Product, { ProductAttributes } from './products.model'
 
 ${exports.GET_ALL_FUNCTIONS}
 `;
@@ -164,45 +164,45 @@ router.route('/:productId').delete(deleteProduct)
 
 export default router;
 `;
-exports.MODEL_HAS_ONE = `FileResourceNameModel.hasOne(ProductModel, {
+exports.MODEL_HAS_ONE = `FileResourceName.hasOne(Product, {
     foreignKey: 'fileResourceNameId',
     as: 'product'
 });
 
-ProductModel.belongsTo(FileResourceNameModel, {
+Product.belongsTo(FileResourceName, {
   foreignKey: 'fileResourceNameId',
   as: 'fileResourceName',
   onDelete: 'CASCADE'
 })
 `;
-exports.MODEL_HAS_MANY = `FileResourceNameModel.hasMany(ProductModel, {
+exports.MODEL_HAS_MANY = `FileResourceName.hasMany(Product, {
     foreignKey: 'fileResourceNameId',
     as: 'products'
 });
 
-ProductModel.belongsTo(FileResourceNameModel, {
+Product.belongsTo(FileResourceName, {
     foreignKey: 'fileResourceNameId',
     as: 'fileResourceName',
     onDelete: 'CASCADE'
 })
 `;
 // FIND_BY_PK
-exports.SEQUELIZE_FIND_BY_PK = `    const product = await ProductModel.findByPk(productId)
+exports.SEQUELIZE_FIND_BY_PK = `    const product = await Product.findByPk(productId)
     
     if (!product) throw new Error('Product not found');
 `;
-exports.SEQUELIZE_FIND_BY_PK_WITH_OPTIONS = `    const product = await ProductModel.findByPk(productId, {
+exports.SEQUELIZE_FIND_BY_PK_WITH_OPTIONS = `    const product = await Product.findByPk(productId, {
         ~options~
     })
     
     if (!product) throw new Error('Product not found');
     `;
-exports.SEQUELIZE_FIND_BY_PK_PLAIN = `    const productInstance = await ProductModel.findByPk(productId)
+exports.SEQUELIZE_FIND_BY_PK_PLAIN = `    const productInstance = await Product.findByPk(productId)
     
     if (!productInstance) throw new Error('Product not found');
     const product = productInstance.get({ plain: true });
     `;
-exports.SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN = `    const productInstance = await ProductModel.findByPk(productId, {
+exports.SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN = `    const productInstance = await Product.findByPk(productId, {
         ~options~
     })
     
@@ -210,23 +210,23 @@ exports.SEQUELIZE_FIND_BY_PK_WITH_OPTIONS_PLAIN = `    const productInstance = a
     const product = productInstance.get({ plain: true });
     `;
 // FIND_ONE
-exports.SEQUELIZE_FIND_ONE = `    const product = await ProductModel.findOne({
+exports.SEQUELIZE_FIND_ONE = `    const product = await Product.findOne({
         where: { }
     })
     `;
-exports.SEQUELIZE_FIND_ONE_WITH_OPTIONS = `    const product = await ProductModel.findOne({
+exports.SEQUELIZE_FIND_ONE_WITH_OPTIONS = `    const product = await Product.findOne({
         where: { },
         ~options~
     })
     `;
-exports.SEQUELIZE_FIND_ONE_PLAIN = `    const productInstance = await ProductModel.findOne({
+exports.SEQUELIZE_FIND_ONE_PLAIN = `    const productInstance = await Product.findOne({
         where: { }
     })
 
     if (!productInstance) throw new Error('Product not found');
     const product = productInstance.get({ plain: true });
     `;
-exports.SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN = `    const productInstance = await ProductModel.findOne({
+exports.SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN = `    const productInstance = await Product.findOne({
         where: { },
         ~options~
     })
@@ -235,20 +235,20 @@ exports.SEQUELIZE_FIND_ONE_WITH_OPTIONS_PLAIN = `    const productInstance = awa
     const product = productInstance.get({ plain: true });
     `;
 // FIND_ALL
-exports.SEQUELIZE_FIND_ALL = `    const products = await ProductModel.findAll();
+exports.SEQUELIZE_FIND_ALL = `    const products = await Product.findAll();
     `;
-exports.SEQUELIZE_FIND_ALL_WITH_OPTIONS = `    const products = await ProductModel.findAll({
+exports.SEQUELIZE_FIND_ALL_WITH_OPTIONS = `    const products = await Product.findAll({
         ~options~
     })
     `;
-exports.SEQUELIZE_FIND_ALL_PLAIN = `    const productInstances = await ProductModel.findAll();
+exports.SEQUELIZE_FIND_ALL_PLAIN = `    const productInstances = await Product.findAll();
 
     const products = productInstances.map((productInstance) => {
         const product = productInstance.get({ plain: true });
         return { ...product };
     })
     `;
-exports.SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN = `    const productInstances = await ProductModel.findAll({
+exports.SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN = `    const productInstances = await Product.findAll({
         ~options~
     })
         
@@ -258,11 +258,11 @@ exports.SEQUELIZE_FIND_ALL_WITH_OPTIONS_PLAIN = `    const productInstances = aw
     })
     `;
 // CREATE, UPDATE, DELETE
-exports.SEQUELIZE_CREATE = `    const product = await ProductModel.create()`;
-exports.SEQUELIZE_UPDATE = `    await ProductModel.update(
+exports.SEQUELIZE_CREATE = `    const product = await Product.create()`;
+exports.SEQUELIZE_UPDATE = `    await Product.update(
       { },
       { where: { productId } }
     );
     `;
-exports.SEQUELIZE_DELETE = `    await ProductModel.destroy({ where: { }})`;
+exports.SEQUELIZE_DELETE = `    await Product.destroy({ where: { }})`;
 //# sourceMappingURL=express.js.map

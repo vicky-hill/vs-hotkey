@@ -11,8 +11,8 @@ const editor_1 = require("../utils/editor");
 const generateModel = async (input, modelName, projectName, repoName) => {
     // const fields = input.replace(/ /g, "").split(",");
     const fields = input.split(' ');
-    const className = `${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}Model`;
-    const tableName = (0, string_1.uncapitalize)((0, string_1.pluralize)(modelName.replace("Model", "")));
+    const className = `${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}`;
+    const tableName = (0, string_1.uncapitalize)((0, string_1.pluralize)(modelName));
     const schemaName = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Schema`;
     const id = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Id`;
     const shopApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
@@ -132,7 +132,8 @@ import sequelize from '../../../config/${projectName}.db.config'`;
         .join(",\n");
     const snippet = `${imports}
 
-export type omit = { omit: 'createdAt' | 'updatedAt' };    
+export type ${className}Attributes = InferAttributes<${className}, omit>
+export type omit = { omit: 'createdAt' | 'updatedAt' }
 
 class ${className} extends Model<InferAttributes<${className}, omit>, InferCreationAttributes<${className}, omit>> {
     declare ${id}: CreationOptional<number>
