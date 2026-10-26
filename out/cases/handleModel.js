@@ -14,7 +14,8 @@ const generateModel = async (input, modelName, projectName, repoName) => {
     const className = `${(0, string_1.capitalize)((0, string_1.unpluralize)(modelName))}`;
     const tableName = (0, string_1.uncapitalize)((0, string_1.pluralize)(modelName));
     const schemaName = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Schema`;
-    const id = `${(0, string_1.uncapitalize)((0, string_1.unpluralize)(modelName))}Id`;
+    // const id = `${uncapitalize(unpluralize(modelName))}Id`;
+    const id = 'id';
     const shopApiImports = `import Sequelize, { Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import sequelize from '../config/westgate.db.config'
     `;

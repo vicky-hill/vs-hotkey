@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from Hot Key!');
 	});
 
-	// Register the insert snippet command (triggered by F14 key - remapped from Caps Lock)
+	// Register the insert snippet command (triggered by F24 key - remapped from Caps Lock)
 	const insertSnippet = vscode.commands.registerCommand('hotkey.insertSnippet', async () => {
 		const editor = vscode.window.activeTextEditor;
 

@@ -65,9 +65,9 @@ exports.GET_ALL_FUNCTIONS = `export const getProducts = async () => {
     return products;
 }`;
 exports.GET_BY_FUNCTIONS = `export const getProductById = async (productId: string) => {
-    const product = await Product.findByPk(productId);
-
-    if (!product) throw new Error('Product not found');
+    const product = await Product.findByPk(productId, {
+      rejectOnEmpty: new Error('Product not found')
+    });
  
     return product;
 }`;
@@ -77,18 +77,18 @@ exports.CREATE_FUNCTIONS = `export const createProduct = async (data: ProductAtt
     return product;
 }`;
 exports.UPDATE_FUNCTIONS = `export const updateProduct = async (data: ProductAttributes, productId: string) => {
-    const product = await Product.findByPk(productId);
-
-    if (!product) throw new Error('Product not found');
+    const product = await Product.findByPk(productId, {
+      rejectOnEmpty: new Error('Product not found')
+    });
 
     await product.update(data);
     
     return product;
 }`;
 exports.DELETE_FUNCTIONS = `export const deleteProduct = async (productId: string) => {
-    const product = await Product.findByPk(productId);
-
-    if (!product) throw new Error('Product not found');
+    const product = await Product.findByPk(productId, {
+      rejectOnEmpty: new Error('Product not found')
+    });
 
     await product.destroy();
 
