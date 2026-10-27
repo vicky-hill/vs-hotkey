@@ -58,7 +58,7 @@
       },
       {
         "command": "hotkey.insertSnippet",
-        "key": "f24",
+        "key": "f20",
         "when": "editorTextFocus"
       }
     ],
